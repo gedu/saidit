@@ -16,16 +16,27 @@
 
 package com.gemapps.saidit.ui.toplisting;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.gemapps.saidit.R;
+import com.gemapps.saidit.ui.butter.ButterFragment;
 
-public class TopListingActivity extends AppCompatActivity {
+public class TopListingFragment extends ButterFragment {
+
+
+    public TopListingFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_listing);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return createView(inflater, container, R.layout.fragment_top_listing);
     }
+
 }
+

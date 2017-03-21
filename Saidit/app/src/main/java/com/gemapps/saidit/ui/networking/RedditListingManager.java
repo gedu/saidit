@@ -14,18 +14,21 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.toplisting;
+package com.gemapps.saidit.ui.networking;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+/**
+ * Created by edu on 3/21/17.
+ */
 
-import com.gemapps.saidit.R;
+public class RedditListingManager {
 
-public class TopListingActivity extends AppCompatActivity {
+    private static RedditListingManager mInstance;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_listing);
+    public static RedditListingManager getInstance(){
+        if(mInstance == null) mInstance = new RedditListingManager();
+        return mInstance;
     }
+
+    private RedditListingManager(){}
+
 }

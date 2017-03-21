@@ -1,0 +1,51 @@
+/*
+ *    Copyright 2017 Edu Graciano
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package com.gemapps.saidit.networking.deserializer;
+
+import com.gemapps.saidit.ui.model.TopEntries;
+import com.gemapps.saidit.ui.model.TopListingItem;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
+
+/**
+ * Created by edu on 3/21/17.
+ */
+
+public class TopEntriesDeserializer implements JsonDeserializer<TopEntries> {
+
+    @Override
+    public TopEntries deserialize(JsonElement json, Type typeOfT,
+                                            JsonDeserializationContext context) throws JsonParseException {
+        JsonElement topData = json.getAsJsonObject().get("data");
+        JsonArray entries = topData.getAsJsonObject().get("children").getAsJsonArray();
+
+        TopEntries topEntries = new TopEntries();
+        Gson gson = new Gson();
+        for (JsonElement element : entries) {
+            JsonElement entryData = element.getAsJsonObject().get("data");
+            TopListingItem topItem = gson.fromJson(entryData, TopListingItem.class);
+            topEntries.setEntry(topItem);
+        }
+        return topEntries;
+    }
+}

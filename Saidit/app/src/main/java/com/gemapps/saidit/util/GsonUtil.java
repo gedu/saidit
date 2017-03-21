@@ -14,22 +14,19 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.toplisting;
+package com.gemapps.saidit.util;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import com.gemapps.saidit.ui.model.TopEntries;
+import com.gemapps.saidit.networking.deserializer.TopEntriesDeserializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import com.gemapps.saidit.R;
-import com.gemapps.saidit.networking.AuthenticationClientAsync;
+/**
+ * Created by edu on 3/21/17.
+ */
 
-import static com.gemapps.saidit.networking.RedditAPI.BASE_O_REDDIT_URL;
+public class GsonUtil {
 
-public class TopListingActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_listing);
-        new AuthenticationClientAsync().authenticate(BASE_O_REDDIT_URL);
-    }
+    public static final Gson TOP_ENTRY_GSON = new GsonBuilder().registerTypeAdapter(TopEntries.class,
+            new TopEntriesDeserializer()).create();
 }

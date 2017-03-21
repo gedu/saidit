@@ -10,6 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         buildConfigField "String", 'REDDIT_CLIENT_ID', REDDIT_CLIENT_ID
+        buildConfigField "String", 'REDDIT_PASSWORD', REDDIT_PASSWORD
         versionCode 1
         versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -61,7 +62,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.squareup.picasso:picasso:2.3.2'
-    compile 'com.squareup.okhttp:okhttp:2.0.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'io.realm:android-adapters:1.4.0'
     compile 'org.greenrobot:eventbus:3.0.0'

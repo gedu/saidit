@@ -14,22 +14,23 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.toplisting;
+package com.gemapps.saidit.ui.model;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.gemapps.saidit.R;
-import com.gemapps.saidit.networking.AuthenticationClientAsync;
+/**
+ * Created by edu on 3/21/17.
+ */
 
-import static com.gemapps.saidit.networking.RedditAPI.BASE_O_REDDIT_URL;
+public class TopEntries {
+    private List<TopListingItem> mEntries = new ArrayList<>();
 
-public class TopListingActivity extends AppCompatActivity {
+    public List<TopListingItem> getEntries() {
+        return mEntries;
+    }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_listing);
-        new AuthenticationClientAsync().authenticate(BASE_O_REDDIT_URL);
+    public void setEntry(TopListingItem entries) {
+        mEntries.add(entries);
     }
 }

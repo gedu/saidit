@@ -14,37 +14,39 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.util;
+package com.gemapps.saidit.networking;
+
+import com.gemapps.saidit.busitem.EntryResponseBridge;
+import com.gemapps.saidit.ui.model.TopEntries;
+import com.gemapps.saidit.networking.inject.NetBridge;
+import com.gemapps.saidit.util.GsonUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import static com.gemapps.saidit.util.JsonUtil.readFrom;
 
 /**
  * Created by edu on 3/21/17.
  */
 
-public class JsonUtil {
+public class LocalClientAsync implements NetBridge {
 
     private static final String JSON_EXAMPLE_NAME = "top.json";
 
-    public String loadJsonFromResources(){
+    @Override
+    public void doGet(EventBus eventBus, String url) {
+        String json = loadJsonFromResources();
+        TopEntries topEntries = GsonUtil.TOP_ENTRY_GSON.fromJson(json, TopEntries.class);
+        eventBus.post(new EntryResponseBridge(topEntries.getEntries()));
+    }
 
+    private String loadJsonFromResources(){
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(JSON_EXAMPLE_NAME);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return readFrom(reader);
-    }
-
-    private String readFrom(BufferedReader reader) {
-        String json;
-        StringBuilder builder = new StringBuilder();
-        try {
-            while ((json = reader.readLine()) != null) builder.append(json);
-            return builder.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
     }
 }

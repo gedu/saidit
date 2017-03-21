@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.networking;
+package com.gemapps.saidit.networking;
 
 /**
  * Created by edu on 3/21/17.

@@ -14,25 +14,17 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.networking;
+package com.gemapps.saidit.networking;
 
-import com.gemapps.saidit.BuildConfig;
+import com.gemapps.saidit.networking.inject.NetBridge;
 
 /**
  * Created by edu on 3/21/17.
  */
 
-public interface RedditAPI {
-    String BASE_REDDIT_URL = "https://www.reddit.com";
-    String BASE_O_REDDIT_URL = "https://oauth.reddit.com";
-    String SUBREDDIT_PATH = "/r/{subreddit}/.json";
-    String LIMIT = "limit";
-    String BEFORE = "before";
-    String AFTER = "after";
-    String SUBREDDIT = "subreddit";
+public class NetInjector {
 
-    String REDDIT_OATH2_PATH = "/api/v1/access_token";
-
-    String REDDIT_CLIENT_ID = BuildConfig.REDDIT_CLIENT_ID;
-    String BODY_PARAMS = "grant_type=https://oauth.reddit.com/grants/installed_client&device_id=";
+    public static NetBridge getClientAsync(){
+        return new NetClientAsync();
+    }
 }

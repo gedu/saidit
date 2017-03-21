@@ -14,7 +14,12 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.util;
+package com.gemapps.saidit.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by edu on 3/21/17.
@@ -22,4 +27,25 @@ package com.gemapps.saidit.ui.util;
 
 public class JsonUtil {
 
+    private static final String JSON_EXAMPLE_NAME = "top.json";
+
+    //TODO: REMOVE FROM HERE
+    public String loadJsonFromResources(){
+
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(JSON_EXAMPLE_NAME);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return readFrom(reader);
+    }
+
+    public static String readFrom(BufferedReader reader) {
+        String json;
+        StringBuilder builder = new StringBuilder();
+        try {
+            while ((json = reader.readLine()) != null) builder.append(json);
+            return builder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

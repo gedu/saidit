@@ -14,22 +14,15 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.toplisting;
+package com.gemapps.saidit.networking.inject;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import org.greenrobot.eventbus.EventBus;
 
-import com.gemapps.saidit.R;
-import com.gemapps.saidit.networking.AuthenticationClientAsync;
+/**
+ * Created by edu on 3/21/17.
+ */
 
-import static com.gemapps.saidit.networking.RedditAPI.BASE_O_REDDIT_URL;
+public interface NetBridge {
 
-public class TopListingActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_listing);
-        new AuthenticationClientAsync().authenticate(BASE_O_REDDIT_URL);
-    }
+    void doGet(EventBus eventBus, String url);
 }

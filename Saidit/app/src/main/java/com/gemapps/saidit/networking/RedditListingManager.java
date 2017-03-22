@@ -16,6 +16,10 @@
 
 package com.gemapps.saidit.networking;
 
+import com.gemapps.saidit.networking.model.Bearer;
+
+import io.realm.Realm;
+
 /**
  * Created by edu on 3/21/17.
  */
@@ -29,6 +33,30 @@ public class RedditListingManager {
         return mInstance;
     }
 
-    private RedditListingManager(){}
+    private Bearer mBearer;
+    private Realm mRealm;
 
+    private RedditListingManager(){
+        mRealm = Realm.getDefaultInstance();
+        mBearer = mRealm.where(Bearer.class).findFirst();
+    }
+
+    public void authenticate(){
+        if (isAuthenticated()){
+            mBearer = mRealm.where(Bearer.class).findFirstAsync();
+            new AuthenticationClientAsync().authenticate(RedditAPI.BASE_O_REDDIT_URL);
+        }
+    }
+
+    public boolean isAuthenticated(){
+        return mBearer != null && mBearer.isLoaded() && mBearer.isValid();
+    }
+
+    public String getBearerToken() {
+        return mBearer.getToken();
+    }
+
+    public Realm getRealm() {
+        return mRealm;
+    }
 }

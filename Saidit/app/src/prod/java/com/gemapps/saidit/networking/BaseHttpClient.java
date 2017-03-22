@@ -37,10 +37,7 @@ import okhttp3.Response;
 public abstract class BaseHttpClient {
 
     private static final String TAG = "BaseHttpClient";
-    public interface HttpClientListener {
-        void onSuccess(String response);
-        void onFailure();
-    }
+
     static final String AUTHORIZATION_KEY = "Authorization";
     private static final String BEARER_VALUE = "Bearer %s";
     private static final int OK = 200;
@@ -92,7 +89,7 @@ public abstract class BaseHttpClient {
     }
 
     private String formatBearer(){
-        return "";//String.format(BEARER_VALUE, TwitterSearchManager.getInstance().getBearerToken());
+        return String.format(BEARER_VALUE, RedditListingManager.getInstance().getBearerToken());
     }
 
     protected abstract void onSuccess(String body);

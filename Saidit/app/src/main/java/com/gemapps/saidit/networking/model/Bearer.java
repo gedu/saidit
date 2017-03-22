@@ -30,9 +30,19 @@ public class Bearer extends RealmObject {
     private String mId;
     @SerializedName("access_token")
     private String mToken;
+    @SerializedName("device_id")
+    private String mDeviceId;
 
     public Bearer() {
         mId = "Bearer";
+    }
+
+    public String getDeviceId() {
+        return mDeviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        mDeviceId = deviceId;
     }
 
     public String getToken() {

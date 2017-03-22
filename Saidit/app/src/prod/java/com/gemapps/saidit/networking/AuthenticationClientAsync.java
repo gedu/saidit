@@ -17,8 +17,12 @@
 package com.gemapps.saidit.networking;
 
 import android.util.Log;
-import java.util.UUID;
 
+import com.gemapps.saidit.networking.model.Bearer;
+import com.gemapps.saidit.util.Util;
+import com.google.gson.Gson;
+
+import io.realm.Realm;
 import okhttp3.Credentials;
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -37,19 +41,23 @@ public class AuthenticationClientAsync extends BaseHttpClient implements RedditA
         builder.add("Authorization", Credentials.basic(REDDIT_CLIENT_ID, REDDIT_PASSWORD));
         RequestBody body = new FormBody.Builder()
                 .add(GRANT_TYPE_KEY, GRANT_TYPE_VALUE)
-                .add(DEVICE_ID_KEY, "b798303e-fb9f-4b2e-b68b-d00b32471d95").build();
+                .add(DEVICE_ID_KEY, Util.getRandomID()).build();
 
         doPost(url, builder.build(), body);
     }
 
-    private String getRandomID(){
-        // TODO: 3/21/17 save it locally
-        return UUID.randomUUID().toString();
-    }
-
     @Override
-    protected void onSuccess(String body) {
+    protected void onSuccess(final String body) {
         Log.d(TAG, "onSuccess() called with: body = <" + body + ">");
+        RedditListingManager.getInstance()
+                .getRealm()
+                .executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Bearer bearer = new Gson().fromJson(body, Bearer.class);
+                        realm.insertOrUpdate(bearer);
+                    }
+                });
     }
 
     @Override

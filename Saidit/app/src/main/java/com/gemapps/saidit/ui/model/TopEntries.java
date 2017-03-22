@@ -51,4 +51,20 @@ public class TopEntries {
     public void setAfter(String after) {
         mAfter = after;
     }
+
+    public boolean isValid(){
+        return hasEntries() && (hasBeforeTag() || hasAfterTag());
+    }
+
+    private boolean hasEntries(){
+        return mEntries.size() > 0;
+    }
+
+    private boolean hasBeforeTag(){
+        return mBefore.length() > 0;
+    }
+
+    private boolean hasAfterTag(){
+        return mAfter.length() > 0;
+    }
 }

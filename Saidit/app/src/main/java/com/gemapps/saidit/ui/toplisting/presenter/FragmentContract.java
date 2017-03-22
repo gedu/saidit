@@ -27,15 +27,15 @@ import java.util.List;
  * Created by edu on 3/21/17.
  */
 
-public class FragmentContract {
+public interface FragmentContract {
 
-    public interface View {
+    interface View {
         void onPopulateList(List<TopListingItem> listingItems);
         void hideEmptyView();
         void showEmptyView();
     }
 
-    public interface OnInteractionListener {
+    interface OnInteractionListener {
         void onEventBusSubscribe(EventBus bus);
         void onEventBusUnSubscribe(EventBus bus);
         void addAdapter(TopListingAdapter adapter);

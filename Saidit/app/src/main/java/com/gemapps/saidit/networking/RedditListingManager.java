@@ -16,11 +16,12 @@
 
 package com.gemapps.saidit.networking;
 
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import com.gemapps.saidit.networking.model.Bearer;
-import com.gemapps.saidit.networking.request.AuthenticationClientAsync;
+import com.gemapps.saidit.networking.request.RedditContract;
 import com.gemapps.saidit.networking.request.TopListingRequest;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,8 +31,9 @@ import io.realm.Realm;
  * Created by edu on 3/21/17.
  */
 
-public class RedditListingManager {
+public class RedditListingManager implements RedditContract.Manager {
     private static final String TAG = "RedditListingManager";
+
     private static RedditListingManager mInstance;
 
     public static RedditListingManager getInstance(){
@@ -39,39 +41,54 @@ public class RedditListingManager {
         return mInstance;
     }
 
-    private Bearer mBearer;
-    private Realm mRealm;
+    private RedditContract.OnInteractionListener mInteractionListener;
 
     private RedditListingManager(){
-        mRealm = Realm.getDefaultInstance();
-        mBearer = mRealm.where(Bearer.class).findFirst();
+        mInteractionListener = new RedditPresenter(this);
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public void setInstance(RedditContract.OnInteractionListener listener){
+        mInteractionListener = listener;
+    }
+
+
+    @Override
+    public RedditListingManager init(Realm realm){
+        mInteractionListener.setRealm(realm);
+        mInteractionListener.findBearer();
+        return mInstance;
+    }
+
+    @Override
     public void authenticate(){
-        if (!isAuthenticated()){
+        if (!mInteractionListener.isAuthenticated()){
             Log.d(TAG, "authenticate: ");
-            mBearer = mRealm.where(Bearer.class).findFirstAsync();
-            new AuthenticationClientAsync().authenticate(RedditAPI.ACCESS_TOKEN_REDDIT_URL);
+            mInteractionListener.findBearerAsync();
+            mInteractionListener.doAuthentication();
         }
     }
 
-    public void getTopListing(String query){
-        if(isAuthenticated()){
-            Log.d(TAG, "getTopListing");
-            new TopListingRequest(NetInjector.getClientAsync(), EventBus.getDefault())
-                    .getTopListing(query);
+    public void getTopListing(EventBus bus, String query,
+                              @PaginationManager.PaginationType int pagType){
+        if(mInteractionListener.isAuthenticated()){
+            new TopListingRequest(NetInjector.getClientAsync(), bus)
+                    .getTopListing(query, pagType);
         }
     }
 
+    @Override
     public boolean isAuthenticated(){
-        return mBearer != null && mBearer.isLoaded() && mBearer.isValid();
+        return mInteractionListener.isAuthenticated();
     }
 
+    @Override
     public String getBearerToken() {
-        return mBearer.getToken();
+        return mInteractionListener.getToken();
     }
 
+    @Override
     public Realm getRealm() {
-        return mRealm;
+        return mInteractionListener.getRealm();
     }
 }

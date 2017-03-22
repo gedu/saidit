@@ -17,8 +17,9 @@
 package com.gemapps.saidit.networking;
 
 import com.gemapps.saidit.busitem.EntryResponseBridge;
-import com.gemapps.saidit.ui.model.TopEntries;
 import com.gemapps.saidit.networking.inject.NetBridge;
+import com.gemapps.saidit.ui.model.TopEntries;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
 import com.gemapps.saidit.util.GsonUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,10 +39,18 @@ public class LocalClientAsync implements NetBridge {
     private static final String JSON_EXAMPLE_NAME = "top.json";
 
     @Override
-    public void doGet(EventBus eventBus, String url) {
+    public void doGet(EventBus eventBus, String url, int tag) {
         String json = loadJsonFromResources();
         TopEntries topEntries = GsonUtil.TOP_ENTRY_GSON.fromJson(json, TopEntries.class);
+        updatePaginationManagerWithValidContent(topEntries, tag);
         eventBus.post(new EntryResponseBridge(topEntries.getEntries()));
+    }
+
+    private void updatePaginationManagerWithValidContent(TopEntries topEntries, int tag){
+        PaginationManager.getInstance()
+                .setAfter(topEntries.getAfter())
+                .setBefore(topEntries.getBefore())
+                .updateCount(tag);
     }
 
     private String loadJsonFromResources(){

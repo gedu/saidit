@@ -16,27 +16,22 @@
 
 package com.gemapps.saidit.busitem;
 
-import com.gemapps.saidit.ui.model.TopListingItem;
+import android.support.annotation.IntDef;
 
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by edu on 3/21/17.
+ * Created by edu on 3/22/17.
  */
-public class EntryResponseBridge implements BusBridge {
 
-    private List<TopListingItem> mItems;
+public interface BusBridge {
 
-    public EntryResponseBridge(List<TopListingItem> items) {
-        mItems = items;
-    }
+    @IntDef(flag=true, value={ENTRY, PAGINATION})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface BusBridgeType{}
+    public static final int ENTRY = 0;
+    public static final int PAGINATION = 1;
 
-    public List<TopListingItem> getItems() {
-        return mItems;
-    }
-
-    @Override
-    public int getBridgeType() {
-        return ENTRY;
-    }
+    int getBridgeType();
 }

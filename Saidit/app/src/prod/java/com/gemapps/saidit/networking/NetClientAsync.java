@@ -22,7 +22,7 @@ import com.gemapps.saidit.busitem.EntryResponseBridge;
 import com.gemapps.saidit.networking.inject.NetBridge;
 import com.gemapps.saidit.networking.request.BaseHttpClient;
 import com.gemapps.saidit.ui.model.TopEntries;
-import com.gemapps.saidit.ui.toplisting.PaginationManager;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
 import com.gemapps.saidit.util.GsonUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,17 +37,35 @@ public class NetClientAsync extends BaseHttpClient
     private EventBus mBus;
 
     @Override
-    public void doGet(EventBus eventBus, String url) {
+    public void doGet(EventBus eventBus, String url, int tagType) {
         mBus = eventBus;
-        doGet(url);
+        doGet(url, tagType);
     }
 
     @Override
-    protected void onSuccess(String body) {
+    protected void onSuccess(String body, int tag) {
         TopEntries topEntries = GsonUtil.TOP_ENTRY_GSON.fromJson(body, TopEntries.class);
+
+        if(topEntries.isValid()) {
+            updatePaginationManagerWithValidContent(topEntries, tag);
+            notify(topEntries);
+        } else{
+            resetPaginationManager();
+        }
+    }
+
+    private void updatePaginationManagerWithValidContent(TopEntries topEntries, int tag){
         PaginationManager.getInstance()
                 .setAfter(topEntries.getAfter())
-                .setBefore(topEntries.getBefore());
+                .setBefore(topEntries.getBefore())
+                .updateCount(tag);
+    }
+
+    private void resetPaginationManager(){
+        PaginationManager.getInstance().setBefore("");
+    }
+
+    private void notify(TopEntries topEntries){
         mBus.post(new EntryResponseBridge(topEntries.getEntries()));
     }
 

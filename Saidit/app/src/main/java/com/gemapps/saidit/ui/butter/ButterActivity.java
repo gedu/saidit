@@ -14,29 +14,22 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.busitem;
+package com.gemapps.saidit.ui.butter;
 
-import com.gemapps.saidit.ui.model.TopListingItem;
+import android.support.annotation.LayoutRes;
+import android.support.v7.app.AppCompatActivity;
 
-import java.util.List;
+import butterknife.ButterKnife;
 
 /**
- * Created by edu on 3/21/17.
+ * Created by edu on 3/22/17.
  */
-public class EntryResponseBridge implements BusBridge {
 
-    private List<TopListingItem> mItems;
-
-    public EntryResponseBridge(List<TopListingItem> items) {
-        mItems = items;
-    }
-
-    public List<TopListingItem> getItems() {
-        return mItems;
-    }
+public class ButterActivity extends AppCompatActivity {
 
     @Override
-    public int getBridgeType() {
-        return ENTRY;
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+        ButterKnife.bind(this);
     }
 }

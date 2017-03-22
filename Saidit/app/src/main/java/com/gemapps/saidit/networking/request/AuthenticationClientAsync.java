@@ -49,7 +49,7 @@ public class AuthenticationClientAsync extends BaseHttpClient implements RedditA
     }
 
     @Override
-    protected void onSuccess(final String body) {
+    protected void onSuccess(final String body, int tag) {
         Log.d(TAG, "onSuccess() called with: body = <" + body + ">");
         RedditListingManager.getInstance()
                 .getRealm()

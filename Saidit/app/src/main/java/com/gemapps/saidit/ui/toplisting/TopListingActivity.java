@@ -17,15 +17,74 @@
 package com.gemapps.saidit.ui.toplisting;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.gemapps.saidit.R;
+import com.gemapps.saidit.ui.butter.ButterActivity;
+import com.gemapps.saidit.ui.toplisting.presenter.ActivityContract;
+import com.gemapps.saidit.ui.toplisting.presenter.ActivityPresenter;
 
-public class TopListingActivity extends AppCompatActivity {
+import org.greenrobot.eventbus.EventBus;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+
+public class TopListingActivity extends ButterActivity
+        implements ActivityContract.View {
+
+    @BindView(R.id.prev_button_text)
+    View mPrevButton;
+    @BindView(R.id.next_button_text)
+    View mNextButton;
+
+    private ActivityContract.OnInteractionListener mInteractionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_listing);
+        mInteractionListener = new ActivityPresenter(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mInteractionListener.onEventBusSubscribe(EventBus.getDefault());
+    }
+
+    @Override
+    protected void onStop() {
+        mInteractionListener.onEventBusUnSubscribe(EventBus.getDefault());
+        super.onStop();
+    }
+
+    @OnClick(R.id.prev_button_text)
+    public void onPrevClick(){
+        mInteractionListener.onPrevClicked();
+    }
+
+    @OnClick(R.id.next_button_text)
+    public void onNextClick(){
+        mInteractionListener.onNextClicked();
+    }
+
+    @Override
+    public void onDisablePrevButton() {
+        mPrevButton.setEnabled(false);
+    }
+
+    @Override
+    public void onDisableNextButton() {
+        mNextButton.setEnabled(false);
+    }
+
+    @Override
+    public void onEnablePrevButton() {
+        mPrevButton.setEnabled(true);
+    }
+
+    @Override
+    public void onEnableNextButton() {
+        mNextButton.setEnabled(true);
     }
 }

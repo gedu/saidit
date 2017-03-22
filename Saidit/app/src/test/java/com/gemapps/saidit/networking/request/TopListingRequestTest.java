@@ -30,6 +30,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static com.gemapps.saidit.ui.paginator.PaginationManager.START;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
@@ -62,7 +63,7 @@ public class TopListingRequestTest {
         mPresenter.onEventBusSubscribe(mMockEventBus);
 
         TopListingRequest topListing = new TopListingRequest(NetInjector.getClientAsync(), mMockEventBus);
-        topListing.getTopListing("");
+        topListing.getTopListing("", START);
         verify(mMockEventBus).post(mResponseCaptor.capture());
         EntryResponseBridge responseBridge = mResponseCaptor.getValue();
 

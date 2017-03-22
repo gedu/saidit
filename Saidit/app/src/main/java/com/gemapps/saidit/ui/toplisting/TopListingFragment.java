@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterFragment;
 import com.gemapps.saidit.ui.model.TopListingItem;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentContract;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentPresenter;
 
@@ -64,13 +65,18 @@ public class TopListingFragment extends ButterFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewHelper = new TopListingViewHelper(view);
-        PaginationManager.getInstance().onStart();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mInteractionListener.onEventBusSubscribe(EventBus.getDefault());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PaginationManager.getInstance().onStart();
     }
 
     @Override

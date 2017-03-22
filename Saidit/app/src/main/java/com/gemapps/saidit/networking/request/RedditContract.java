@@ -14,14 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit;
-
-import android.app.Application;
-import android.util.Log;
+package com.gemapps.saidit.networking.request;
 
 import com.gemapps.saidit.networking.RedditListingManager;
-
-import org.greenrobot.eventbus.EventBus;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
 
 import io.realm.Realm;
 
@@ -29,18 +25,25 @@ import io.realm.Realm;
  * Created by edu on 3/22/17.
  */
 
-public class SaiditApplication extends Application {
-    private static final String TAG = "SaiditApplication";
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "onCreate: ");
-        Realm.init(this);
-        EventBus.builder()
-                .logNoSubscriberMessages(false)
-                .installDefaultEventBus();
-        RedditListingManager.getInstance()
-                .init(Realm.getDefaultInstance())
-                .authenticate();
+public interface RedditContract {
+
+    interface Manager {
+        RedditListingManager init(Realm realm);
+        void authenticate();
+        boolean isAuthenticated();
+        String getBearerToken();
+        Realm getRealm();
+    }
+
+    interface OnInteractionListener {
+        void setRealm(Realm realm);
+        void findBearer();
+        void findBearerAsync();
+        void doAuthentication();
+        void requestTopListing(TopListingRequest request, String query,
+                               @PaginationManager.PaginationType int pagType);
+        boolean isAuthenticated();
+        String getToken();
+        Realm getRealm();
     }
 }

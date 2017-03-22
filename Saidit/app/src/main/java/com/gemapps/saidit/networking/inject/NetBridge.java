@@ -24,5 +24,5 @@ import org.greenrobot.eventbus.EventBus;
 
 public interface NetBridge {
 
-    void doGet(EventBus eventBus, String url);
+    void doGet(EventBus eventBus, String url, int tag);
 }

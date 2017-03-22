@@ -14,28 +14,28 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.networking.request;
-
-import com.gemapps.saidit.networking.RedditAPI;
-import com.gemapps.saidit.networking.inject.NetBridge;
+package com.gemapps.saidit.ui.toplisting.presenter;
 
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * Created by edu on 3/21/17.
+ * Created by edu on 3/22/17.
  */
 
-public class TopListingRequest {
-    private static final String TAG = "TopListingRequest";
-    private NetBridge mNetBridge;
-    private EventBus mEventBus;
+public interface ActivityContract {
 
-    public TopListingRequest(NetBridge netBridge, EventBus eventBus) {
-        mNetBridge = netBridge;
-        mEventBus = eventBus;
+    interface View {
+        void onDisablePrevButton();
+        void onDisableNextButton();
+        void onEnablePrevButton();
+        void onEnableNextButton();
     }
 
-    public void getTopListing(String query, int pagType){
-        mNetBridge.doGet(mEventBus, RedditAPI.LISTING_TOP_URL+query, pagType);
+    interface OnInteractionListener {
+        void onEventBusSubscribe(EventBus bus);
+        void onEventBusUnSubscribe(EventBus bus);
+        void onPaginationStateChanged(int state);
+        void onPrevClicked();
+        void onNextClicked();
     }
 }

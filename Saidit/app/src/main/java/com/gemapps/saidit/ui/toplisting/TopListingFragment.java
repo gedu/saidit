@@ -16,6 +16,7 @@
 
 package com.gemapps.saidit.ui.toplisting;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,14 +24,25 @@ import android.view.ViewGroup;
 
 import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterFragment;
+import com.gemapps.saidit.ui.toplisting.presenter.FragmentContract;
+import com.gemapps.saidit.ui.toplisting.presenter.FragmentPresenter;
 
-public class TopListingFragment extends ButterFragment {
+import org.greenrobot.eventbus.EventBus;
 
+public class TopListingFragment extends ButterFragment
+        implements FragmentContract.View {
+
+    private FragmentContract.OnInteractionListener mInteractionListener;
 
     public TopListingFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mInteractionListener = new FragmentPresenter(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,5 +50,21 @@ public class TopListingFragment extends ButterFragment {
         return createView(inflater, container, R.layout.fragment_top_listing);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mInteractionListener.onEventBusSubscribe(EventBus.getDefault());
+    }
+
+    @Override
+    public void onStop() {
+        mInteractionListener.onEventBusUnSubscribe(EventBus.getDefault());
+        super.onStop();
+    }
+
+    @Override
+    public void onPopulateList() {
+
+    }
 }
 

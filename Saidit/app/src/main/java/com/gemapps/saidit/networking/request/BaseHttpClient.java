@@ -14,11 +14,13 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.networking;
+package com.gemapps.saidit.networking.request;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import com.gemapps.saidit.networking.RedditListingManager;
 
 import java.io.IOException;
 
@@ -44,7 +46,7 @@ public abstract class BaseHttpClient {
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    void doPost(String url, Headers headers, RequestBody body){
+    protected void doPost(String url, Headers headers, RequestBody body){
         final Request request = new Request.Builder()
                 .headers(headers)
                 .url(url)
@@ -53,7 +55,7 @@ public abstract class BaseHttpClient {
         makeNew(request);
     }
 
-    void doGet(String url){
+    protected void doGet(String url){
         final Request request = new Request.Builder()
                 .url(url)
                 .addHeader(AUTHORIZATION_KEY, formatBearer())
@@ -88,7 +90,7 @@ public abstract class BaseHttpClient {
         });
     }
 
-    private String formatBearer(){
+    String formatBearer(){
         return String.format(BEARER_VALUE, RedditListingManager.getInstance().getBearerToken());
     }
 

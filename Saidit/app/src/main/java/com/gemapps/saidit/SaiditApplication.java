@@ -17,6 +17,7 @@
 package com.gemapps.saidit;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.gemapps.saidit.networking.RedditListingManager;
 
@@ -29,10 +30,11 @@ import io.realm.Realm;
  */
 
 public class SaiditApplication extends Application {
-
+    private static final String TAG = "SaiditApplication";
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate: ");
         Realm.init(this);
         EventBus.builder()
                 .logNoSubscriberMessages(false)

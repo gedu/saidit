@@ -25,6 +25,8 @@ import java.util.List;
 
 public class TopEntries {
     private List<TopListingItem> mEntries = new ArrayList<>();
+    private String mBefore;
+    private String mAfter;
 
     public List<TopListingItem> getEntries() {
         return mEntries;
@@ -32,5 +34,21 @@ public class TopEntries {
 
     public void setEntry(TopListingItem entries) {
         mEntries.add(entries);
+    }
+
+    public String getBefore() {
+        return mBefore;
+    }
+
+    public void setBefore(String before) {
+        mBefore = before;
+    }
+
+    public String getAfter() {
+        return mAfter;
+    }
+
+    public void setAfter(String after) {
+        mAfter = after;
     }
 }

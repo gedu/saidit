@@ -16,6 +16,7 @@
 
 package com.gemapps.saidit.networking.request;
 
+import com.gemapps.saidit.networking.RedditAPI;
 import com.gemapps.saidit.networking.inject.NetBridge;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +35,7 @@ public class TopListingRequest {
         mEventBus = eventBus;
     }
 
-    public void getTopListing(){
-        mNetBridge.doGet(mEventBus, "");
+    public void getTopListing(String query){
+        mNetBridge.doGet(mEventBus, RedditAPI.LISTING_TOP_URL+query);
     }
 }

@@ -19,8 +19,10 @@ package com.gemapps.saidit.networking;
 import android.util.Log;
 
 import com.gemapps.saidit.busitem.EntryResponseBridge;
-import com.gemapps.saidit.ui.model.TopEntries;
 import com.gemapps.saidit.networking.inject.NetBridge;
+import com.gemapps.saidit.networking.request.BaseHttpClient;
+import com.gemapps.saidit.ui.model.TopEntries;
+import com.gemapps.saidit.ui.toplisting.PaginationManager;
 import com.gemapps.saidit.util.GsonUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,8 +44,12 @@ public class NetClientAsync extends BaseHttpClient
 
     @Override
     protected void onSuccess(String body) {
-
+//        Log.d(TAG, "onSuccess() called with: body = <" + body + ">");
         TopEntries topEntries = GsonUtil.TOP_ENTRY_GSON.fromJson(body, TopEntries.class);
+        Log.d(TAG, "onSuccess: "+topEntries.getEntries().size());
+        PaginationManager.getInstance()
+                .setAfter(topEntries.getAfter())
+                .setBefore(topEntries.getBefore());
         mBus.post(new EntryResponseBridge(topEntries.getEntries()));
     }
 

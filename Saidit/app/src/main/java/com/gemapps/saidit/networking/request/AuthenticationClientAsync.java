@@ -14,10 +14,12 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.networking;
+package com.gemapps.saidit.networking.request;
 
 import android.util.Log;
 
+import com.gemapps.saidit.networking.RedditAPI;
+import com.gemapps.saidit.networking.RedditListingManager;
 import com.gemapps.saidit.networking.model.Bearer;
 import com.gemapps.saidit.util.Util;
 import com.google.gson.Gson;

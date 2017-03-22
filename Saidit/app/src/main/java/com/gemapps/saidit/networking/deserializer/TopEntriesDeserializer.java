@@ -16,6 +16,8 @@
 
 package com.gemapps.saidit.networking.deserializer;
 
+import android.util.Log;
+
 import com.gemapps.saidit.ui.model.TopEntries;
 import com.gemapps.saidit.ui.model.TopListingItem;
 import com.google.gson.Gson;
@@ -32,14 +34,20 @@ import java.lang.reflect.Type;
  */
 
 public class TopEntriesDeserializer implements JsonDeserializer<TopEntries> {
-
+    private static final String TAG = "TopEntriesDeserializer";
     @Override
     public TopEntries deserialize(JsonElement json, Type typeOfT,
                                             JsonDeserializationContext context) throws JsonParseException {
         JsonElement topData = json.getAsJsonObject().get("data");
+        JsonElement before = topData.getAsJsonObject().get("before");
+        JsonElement after = topData.getAsJsonObject().get("after");
+        Log.d(TAG, "before: "+before);
+        Log.d(TAG, "after: "+after);
         JsonArray entries = topData.getAsJsonObject().get("children").getAsJsonArray();
 
         TopEntries topEntries = new TopEntries();
+        topEntries.setBefore(before != null ? before.getAsString() : "");
+        topEntries.setAfter(after != null ? after.getAsString() : "");
         Gson gson = new Gson();
         for (JsonElement element : entries) {
             JsonElement entryData = element.getAsJsonObject().get("data");

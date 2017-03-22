@@ -16,13 +16,11 @@
 
 package com.gemapps.saidit.ui.toplisting;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.gemapps.saidit.R;
-import com.gemapps.saidit.networking.AuthenticationClientAsync;
-
-import static com.gemapps.saidit.networking.RedditAPI.BASE_O_REDDIT_URL;
 
 public class TopListingActivity extends AppCompatActivity {
 
@@ -30,6 +28,11 @@ public class TopListingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_listing);
-        new AuthenticationClientAsync().authenticate(BASE_O_REDDIT_URL);
+        findViewById(R.id.get_top_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PaginationManager.getInstance().onStart();
+            }
+        });
     }
 }

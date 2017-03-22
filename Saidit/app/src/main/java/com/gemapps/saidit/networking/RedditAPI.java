@@ -24,12 +24,14 @@ import com.gemapps.saidit.BuildConfig;
 
 public interface RedditAPI {
     String BASE_REDDIT_URL = "https://www.reddit.com";
-    String BASE_O_REDDIT_URL = BASE_REDDIT_URL+"/api/v1/access_token";
+    String ACCESS_TOKEN_REDDIT_URL = BASE_REDDIT_URL+"/api/v1/access_token";
+    String BASE_OAUTH_REDDIT_URL = "https://oauth.reddit.com";
+    String LISTING_TOP_URL = BASE_OAUTH_REDDIT_URL+"/top";
+    String COUNT = "count";
     String LIMIT = "limit";
     String BEFORE = "before";
     String AFTER = "after";
-    String SUBREDDIT = "subreddit";
-    String CLIENT_ID = "client_id";
+
     String GRANT_TYPE_KEY = "grant_type";
     String GRANT_TYPE_VALUE = "https://oauth.reddit.com/grants/installed_client";
     String DEVICE_ID_KEY = "device_id";

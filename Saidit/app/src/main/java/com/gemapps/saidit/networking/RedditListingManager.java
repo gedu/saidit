@@ -16,7 +16,13 @@
 
 package com.gemapps.saidit.networking;
 
+import android.util.Log;
+
 import com.gemapps.saidit.networking.model.Bearer;
+import com.gemapps.saidit.networking.request.AuthenticationClientAsync;
+import com.gemapps.saidit.networking.request.TopListingRequest;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.realm.Realm;
 
@@ -25,7 +31,7 @@ import io.realm.Realm;
  */
 
 public class RedditListingManager {
-
+    private static final String TAG = "RedditListingManager";
     private static RedditListingManager mInstance;
 
     public static RedditListingManager getInstance(){
@@ -42,9 +48,18 @@ public class RedditListingManager {
     }
 
     public void authenticate(){
-        if (isAuthenticated()){
+        Log.d(TAG, "authenticate() called");
+        if (!isAuthenticated()){
+            Log.d(TAG, "authenticate: ");
             mBearer = mRealm.where(Bearer.class).findFirstAsync();
-            new AuthenticationClientAsync().authenticate(RedditAPI.BASE_O_REDDIT_URL);
+            new AuthenticationClientAsync().authenticate(RedditAPI.ACCESS_TOKEN_REDDIT_URL);
+        }
+    }
+
+    public void getTopListing(String query){
+        if(isAuthenticated()){
+            new TopListingRequest(NetInjector.getClientAsync(), EventBus.getDefault())
+                    .getTopListing(query);
         }
     }
 

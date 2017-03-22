@@ -48,7 +48,6 @@ public class RedditListingManager {
     }
 
     public void authenticate(){
-        Log.d(TAG, "authenticate() called");
         if (!isAuthenticated()){
             Log.d(TAG, "authenticate: ");
             mBearer = mRealm.where(Bearer.class).findFirstAsync();
@@ -58,6 +57,7 @@ public class RedditListingManager {
 
     public void getTopListing(String query){
         if(isAuthenticated()){
+            Log.d(TAG, "getTopListing");
             new TopListingRequest(NetInjector.getClientAsync(), EventBus.getDefault())
                     .getTopListing(query);
         }

@@ -46,8 +46,8 @@ public class TopEntriesDeserializer implements JsonDeserializer<TopEntries> {
         JsonArray entries = topData.getAsJsonObject().get("children").getAsJsonArray();
 
         TopEntries topEntries = new TopEntries();
-        topEntries.setBefore(before != null ? before.getAsString() : "");
-        topEntries.setAfter(after != null ? after.getAsString() : "");
+        topEntries.setBefore(!before.isJsonNull() ? before.getAsString() : "");
+        topEntries.setAfter(!after.isJsonNull() ? after.getAsString() : "");
         Gson gson = new Gson();
         for (JsonElement element : entries) {
             JsonElement entryData = element.getAsJsonObject().get("data");

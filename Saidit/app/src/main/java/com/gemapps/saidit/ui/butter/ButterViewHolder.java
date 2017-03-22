@@ -14,18 +14,21 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.ui.toplisting;
+package com.gemapps.saidit.ui.butter;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import com.gemapps.saidit.R;
+import butterknife.ButterKnife;
 
-public class TopListingActivity extends AppCompatActivity {
+/**
+ * Created by edu on 3/22/17.
+ */
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top_listing);
+public class ButterViewHolder extends RecyclerView.ViewHolder {
+
+    public ButterViewHolder(View itemView) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
     }
 }

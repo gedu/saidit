@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 
 public class TopListingRequest {
-
+    private static final String TAG = "TopListingRequest";
     private NetBridge mNetBridge;
     private EventBus mEventBus;
 

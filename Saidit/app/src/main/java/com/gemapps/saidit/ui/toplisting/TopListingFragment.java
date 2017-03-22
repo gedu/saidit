@@ -18,21 +18,29 @@ package com.gemapps.saidit.ui.toplisting;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterFragment;
+import com.gemapps.saidit.ui.model.TopListingItem;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentContract;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentPresenter;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
+import butterknife.ButterKnife;
+
 public class TopListingFragment extends ButterFragment
         implements FragmentContract.View {
 
     private FragmentContract.OnInteractionListener mInteractionListener;
+    private TopListingAdapter mAdapter;
+    private TopListingViewHelper mViewHelper;
 
     public TopListingFragment() {
         // Required empty public constructor
@@ -47,7 +55,16 @@ public class TopListingFragment extends ButterFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return createView(inflater, container, R.layout.fragment_top_listing);
+        View view = createView(inflater, container, R.layout.fragment_top_listing);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewHelper = new TopListingViewHelper(view);
+        PaginationManager.getInstance().onStart();
     }
 
     @Override
@@ -63,8 +80,22 @@ public class TopListingFragment extends ButterFragment
     }
 
     @Override
-    public void onPopulateList() {
+    public void onPopulateList(List<TopListingItem> listingItems) {
+        mAdapter = new TopListingAdapter(getActivity(), listingItems);
+        mViewHelper.setAdapter(mAdapter);
+        mInteractionListener.addAdapter(mAdapter);
+        mInteractionListener.updateListingView();
+    }
 
+    @Override
+    public void hideEmptyView() {
+        mViewHelper.hideLoading();
+    }
+
+    @Override
+    public void showEmptyView() {
+        //todo; implement it
+        mViewHelper.showLoading();
     }
 }
 

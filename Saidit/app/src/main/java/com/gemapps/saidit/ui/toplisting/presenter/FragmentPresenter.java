@@ -19,6 +19,7 @@ package com.gemapps.saidit.ui.toplisting.presenter;
 import android.util.Log;
 
 import com.gemapps.saidit.busitem.EntryResponseBridge;
+import com.gemapps.saidit.ui.toplisting.TopListingAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +33,7 @@ public class FragmentPresenter implements FragmentContract.OnInteractionListener
     private static final String TAG = "FragmentPresenter";
 
     private FragmentContract.View mView;
+    private TopListingAdapter mAdapter;
 
     public FragmentPresenter(FragmentContract.View view) {
         mView = view;
@@ -46,12 +48,23 @@ public class FragmentPresenter implements FragmentContract.OnInteractionListener
     public void onNetworkResponseEvent(EntryResponseBridge response){
         Log.d(TAG, "onNetworkResponseEvent "+response.getItems().size());
         System.out.print("EYYASDASDAS");
-        mView.onPopulateList();
+        mView.onPopulateList(response.getItems());
     }
 
     @Override
     public void onEventBusUnSubscribe(EventBus bus) {
         System.out.print("UNregister");
         bus.unregister(this);
+    }
+
+    @Override
+    public void addAdapter(TopListingAdapter adapter) {
+        mAdapter = adapter;
+    }
+
+    @Override
+    public void updateListingView() {
+        if (mAdapter.getItemCount() > 0) mView.hideEmptyView();
+        else mView.showEmptyView();
     }
 }

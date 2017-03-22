@@ -62,7 +62,7 @@ public class TopListingRequestTest {
         mPresenter.onEventBusSubscribe(mMockEventBus);
 
         TopListingRequest topListing = new TopListingRequest(NetInjector.getClientAsync(), mMockEventBus);
-        topListing.getTopListing();
+        topListing.getTopListing("");
         verify(mMockEventBus).post(mResponseCaptor.capture());
         EntryResponseBridge responseBridge = mResponseCaptor.getValue();
 

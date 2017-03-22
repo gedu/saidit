@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="grey_light_54">#8ad6d6d6</color> <!-- 54% of grey_light-->
+    <color name="disable_dark">#43000000</color>
+    <color name="dark_icon">@color/black_54</color>
+    <color name="secondary_text_dark">@color/black_54</color>
+
+    <color name="black_54">#8a000000</color>
+
 </resources>

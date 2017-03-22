@@ -7,15 +7,10 @@
     android:layout_height="match_parent"
     tools:context="com.gemapps.saidit.ui.toplisting.TopListingActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-
-    <Button
-        android:id="@+id/get_top_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GET TOPS"/>
+    <fragment
+        android:id="@+id/top_listing_content_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.gemapps.saidit.ui.toplisting.TopListingFragment"/>
 
 </android.support.design.widget.CoordinatorLayout>

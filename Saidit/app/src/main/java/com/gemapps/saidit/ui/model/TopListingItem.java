@@ -33,10 +33,13 @@ public class TopListingItem {
     private String mThumbnail;
 
     @SerializedName("created")
-    private String mCreated;
+    private long mCreated;
 
     @SerializedName("num_comments")
     private String mNumComments;
+
+    @SerializedName("title")
+    private String mTitle;
 
     public TopListingItem() {
     }
@@ -65,11 +68,11 @@ public class TopListingItem {
         mThumbnail = thumbnail;
     }
 
-    public String getCreated() {
+    public long getCreated() {
         return mCreated;
     }
 
-    public void setCreated(String created) {
+    public void setCreated(long created) {
         mCreated = created;
     }
 
@@ -79,5 +82,17 @@ public class TopListingItem {
 
     public void setNumComments(String numComments) {
         mNumComments = numComments;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public boolean isThumbnailValid(){
+        return mThumbnail != null && mThumbnail.length() > 0;
     }
 }

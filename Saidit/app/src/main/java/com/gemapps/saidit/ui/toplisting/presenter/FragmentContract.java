@@ -16,7 +16,12 @@
 
 package com.gemapps.saidit.ui.toplisting.presenter;
 
+import com.gemapps.saidit.ui.model.TopListingItem;
+import com.gemapps.saidit.ui.toplisting.TopListingAdapter;
+
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by edu on 3/21/17.
@@ -25,11 +30,15 @@ import org.greenrobot.eventbus.EventBus;
 public class FragmentContract {
 
     public interface View {
-        void onPopulateList();
+        void onPopulateList(List<TopListingItem> listingItems);
+        void hideEmptyView();
+        void showEmptyView();
     }
 
     public interface OnInteractionListener {
         void onEventBusSubscribe(EventBus bus);
         void onEventBusUnSubscribe(EventBus bus);
+        void addAdapter(TopListingAdapter adapter);
+        void updateListingView();
     }
 }

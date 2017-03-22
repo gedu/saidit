@@ -44,9 +44,7 @@ public class NetClientAsync extends BaseHttpClient
 
     @Override
     protected void onSuccess(String body) {
-//        Log.d(TAG, "onSuccess() called with: body = <" + body + ">");
         TopEntries topEntries = GsonUtil.TOP_ENTRY_GSON.fromJson(body, TopEntries.class);
-        Log.d(TAG, "onSuccess: "+topEntries.getEntries().size());
         PaginationManager.getInstance()
                 .setAfter(topEntries.getAfter())
                 .setBefore(topEntries.getBefore());

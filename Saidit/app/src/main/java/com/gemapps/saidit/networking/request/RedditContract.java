@@ -17,7 +17,6 @@
 package com.gemapps.saidit.networking.request;
 
 import com.gemapps.saidit.networking.RedditListingManager;
-import com.gemapps.saidit.ui.paginator.PaginationManager;
 
 import io.realm.Realm;
 
@@ -40,8 +39,7 @@ public interface RedditContract {
         void findBearer();
         void findBearerAsync();
         void doAuthentication();
-        void requestTopListing(TopListingRequest request, String query,
-                               @PaginationManager.PaginationType int pagType);
+        boolean isBearerValid();
         boolean isAuthenticated();
         String getToken();
         Realm getRealm();

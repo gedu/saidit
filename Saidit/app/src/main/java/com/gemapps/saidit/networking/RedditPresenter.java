@@ -19,8 +19,6 @@ package com.gemapps.saidit.networking;
 import com.gemapps.saidit.networking.model.Bearer;
 import com.gemapps.saidit.networking.request.AuthenticationClientAsync;
 import com.gemapps.saidit.networking.request.RedditContract;
-import com.gemapps.saidit.networking.request.TopListingRequest;
-import com.gemapps.saidit.ui.paginator.PaginationManager;
 
 import io.realm.Realm;
 
@@ -29,7 +27,7 @@ import io.realm.Realm;
  */
 
 public class RedditPresenter implements RedditContract.OnInteractionListener {
-
+    private static final String TAG = "RedditPresenter";
     private RedditContract.Manager mManager;
     private Realm mRealm;
     private Bearer mBearer;
@@ -37,7 +35,6 @@ public class RedditPresenter implements RedditContract.OnInteractionListener {
     public RedditPresenter(RedditContract.Manager manager) {
         mManager = manager;
     }
-
 
     @Override
     public void setRealm(Realm realm) {
@@ -61,9 +58,8 @@ public class RedditPresenter implements RedditContract.OnInteractionListener {
     }
 
     @Override
-    public void requestTopListing(TopListingRequest request, String query,
-                                  @PaginationManager.PaginationType int pagType) {
-        request.getTopListing(query, pagType);
+    public boolean isBearerValid() {
+        return mBearer.isBearerValid();
     }
 
     @Override

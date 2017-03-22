@@ -18,6 +18,8 @@ package com.gemapps.saidit.networking.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Calendar;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -26,15 +28,18 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Bearer extends RealmObject {
 
+    private static final String TAG = "Bearer";
     @PrimaryKey
     private String mId;
     @SerializedName("access_token")
     private String mToken;
     @SerializedName("device_id")
     private String mDeviceId;
+    private long mSavedTime;
 
     public Bearer() {
         mId = "Bearer";
+        mSavedTime = Calendar.getInstance().getTimeInMillis();
     }
 
     public String getDeviceId() {
@@ -59,5 +64,9 @@ public class Bearer extends RealmObject {
 
     public void setId(String id) {
         this.mId = id;
+    }
+
+    public boolean isBearerValid() {
+        return ((Calendar.getInstance().getTimeInMillis() - mSavedTime)/1000) < 3600;
     }
 }

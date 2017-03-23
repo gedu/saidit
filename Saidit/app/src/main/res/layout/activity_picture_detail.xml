@@ -17,41 +17,50 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fullscreen_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.gemapps.saidit.ui.picturedetail.PictureDetailActivity">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/picture_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@color/colorAccent"
+        android:transitionName="@string/saidit_pic_trans_name"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/disable_dark">
+
+        <ImageButton
+            style="?attr/borderlessButtonStyle"
+            android:id="@+id/back_button"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            app:srcCompat="@drawable/ic_back_white_24px"/>
 
         <TextView
             android:id="@+id/download_button_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:drawablePadding="8dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_gravity="end|center_vertical"
             android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/ripple_oval_bg"
+            android:clickable="true"
             android:drawableEnd="@drawable/ic_cloud_download_white_24px"
-            android:text="@string/download"/>
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/download"
+            android:textColor="@android:color/white"/>
 
-        <ImageView
-            android:id="@+id/picture_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:src="@color/colorAccent"
-            android:transitionName="@string/saidit_pic_trans_name"/>
-    </LinearLayout>
-
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

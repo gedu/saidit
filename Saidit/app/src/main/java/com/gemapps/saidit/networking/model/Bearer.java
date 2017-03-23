@@ -16,6 +16,8 @@
 
 package com.gemapps.saidit.networking.model;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
@@ -35,6 +37,8 @@ public class Bearer extends RealmObject {
     private String mToken;
     @SerializedName("device_id")
     private String mDeviceId;
+    @SerializedName("expires_in")
+    private int mExpirationTime;
     private long mSavedTime;
 
     public Bearer() {
@@ -66,7 +70,25 @@ public class Bearer extends RealmObject {
         this.mId = id;
     }
 
-    public boolean isBearerValid() {
-        return ((Calendar.getInstance().getTimeInMillis() - mSavedTime)/1000) < 3600;
+    public int getExpirationTime() {
+        return mExpirationTime;
     }
+
+    public void setExpirationTime(int expirationTime) {
+        mExpirationTime = expirationTime;
+    }
+
+    public long getSavedTime() {
+        return mSavedTime;
+    }
+
+    public void setSavedTime(long savedTime) {
+        mSavedTime = savedTime;
+    }
+
+    public boolean isBearerValid() {
+        Log.d(TAG, "isBearerValid: "+mExpirationTime);
+        return ((Calendar.getInstance().getTimeInMillis() - mSavedTime)/1000) < mExpirationTime;
+    }
+
 }

@@ -41,7 +41,6 @@ public class ActivityPresenter implements ActivityContract.OnInteractionListener
     @Override
     public void onEventBusSubscribe(EventBus bus) {
         bus.register(this);
-        PaginationManager.getInstance().addEventBus(bus);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

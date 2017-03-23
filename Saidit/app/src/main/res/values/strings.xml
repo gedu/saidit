@@ -11,4 +11,9 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="download">Download</string>
+
+    <string name="avatar_desc">%1$s avatar</string>
+    <string name="image_save_success">Saved</string>
+    <string name="image_save_fail">Fail</string>
+    <string name="try_again">Try again</string>
 </resources>

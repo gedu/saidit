@@ -20,9 +20,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -32,14 +33,12 @@ import android.widget.ImageView;
 
 import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterActivity;
-import com.gemapps.saidit.util.ImageUtil;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PictureDetailActivity extends ButterActivity {
+public class PictureDetailActivity extends ButterActivity
+        implements PictureDetailContract.View {
 
     private static final String TAG = "PictureDetailActivity";
     private static final String PIC_URL = "saidit.PIC_URL";
@@ -49,8 +48,8 @@ public class PictureDetailActivity extends ButterActivity {
     @BindView(R.id.picture_image)
     ImageView mImageView;
 
+    private PictureDetailContract.OnInteractionListener mInteractionListener;
     private final Handler mHideHandler = new Handler();
-    private Bitmap mCurrentPic;
 
     public static Intent getInstance(Context context, String picUrl){
         Intent intent = new Intent(context, PictureDetailActivity.class);
@@ -58,50 +57,13 @@ public class PictureDetailActivity extends ButterActivity {
         return intent;
     }
 
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_detail);
         String url = getIntent().getStringExtra(PIC_URL);
-        Picasso.with(this)
-                .load(url)
-                .placeholder(R.color.grey_light_54)
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Log.d(TAG, "onBitmapLoaded: ");
-                        mCurrentPic = bitmap;
-                        mImageView.setImageBitmap(bitmap);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                    }
-                });
+        mInteractionListener = new PictureDetailPresenter(this);
+        mInteractionListener.loadPicture(this, url);
     }
 
     @Override
@@ -124,7 +86,7 @@ public class PictureDetailActivity extends ButterActivity {
     @OnClick(R.id.download_button_text)
     public void onDownloadClick(){
         Log.d(TAG, "onDownloadClick: ");
-        ImageUtil.saveImage(this, mCurrentPic);
+        mInteractionListener.savePictureLocally(this);
     }
 
     private void hide() {
@@ -136,6 +98,11 @@ public class PictureDetailActivity extends ButterActivity {
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
+    @OnClick(R.id.back_button)
+    public void onBackClick(){
+        super.onBackPressed();
+    }
+
     /**
      * Schedules a call to hide() in [delay] milliseconds, canceling any
      * previously scheduled calls.
@@ -144,4 +111,48 @@ public class PictureDetailActivity extends ButterActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    @Override
+    public void setPicture(Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void showSavedImageSuccess() {
+        Snackbar.make(mContentView, R.string.image_save_success,
+                BaseTransientBottomBar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSavedImageFail() {
+        Snackbar.make(mContentView, R.string.image_save_fail,
+                BaseTransientBottomBar.LENGTH_LONG)
+                .setAction(R.string.try_again, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mInteractionListener.savePictureLocally(v.getContext());
+                    }
+                })
+                .show();
+    }
+
+    private final Runnable mHidePart2Runnable = new Runnable() {
+        @SuppressLint("InlinedApi")
+        @Override
+        public void run() {
+            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+    };
+
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
 }

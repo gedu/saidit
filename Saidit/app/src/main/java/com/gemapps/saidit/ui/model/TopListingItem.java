@@ -16,12 +16,15 @@
 
 package com.gemapps.saidit.ui.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by edu on 3/21/17.
  */
-public class TopListingItem {
+public class TopListingItem implements Parcelable {
 
     @SerializedName("author")
     private String mAuthor;
@@ -44,6 +47,17 @@ public class TopListingItem {
     private transient String mPictureUrl;
 
     public TopListingItem() {
+    }
+
+    public TopListingItem(Parcel in){
+
+        mAuthor = in.readString();
+        mName = in.readString();
+        mThumbnail = in.readString();
+        mCreated = in.readLong();
+        mNumComments = in.readString();
+        mTitle = in.readString();
+        mPictureUrl = in.readString();
     }
 
     public String getAuthor() {
@@ -109,4 +123,31 @@ public class TopListingItem {
     public boolean isThumbnailValid(){
         return mThumbnail != null && mThumbnail.length() > 0;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(mAuthor);
+        dest.writeString(mName);
+        dest.writeString(mThumbnail);
+        dest.writeLong(mCreated);
+        dest.writeString(mNumComments);
+        dest.writeString(mTitle);
+        dest.writeString(mPictureUrl);
+    }
+
+    public static final Creator<TopListingItem> CREATOR = new Creator<TopListingItem>() {
+        public TopListingItem createFromParcel(Parcel in) {
+            return new TopListingItem(in);
+        }
+
+        public TopListingItem[] newArray(int size) {
+            return new TopListingItem[size];
+        }
+    };
 }

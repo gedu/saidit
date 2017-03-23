@@ -14,25 +14,25 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.busitem;
+package com.gemapps.saidit.ui.picturedetail;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import android.content.Context;
+import android.graphics.Bitmap;
 
 /**
- * Created by edu on 3/22/17.
+ * Created by edu on 3/23/17.
  */
 
-public interface BusBridge {
+public interface PictureDetailContract {
 
-    @IntDef(flag=true, value={ENTRY, PAGINATION, OAUTH})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface BusBridgeType{}
-    public static final int ENTRY = 0;
-    public static final int PAGINATION = 1;
-    public static final int OAUTH = 1<<1;
+    interface View {
+        void setPicture(Bitmap bitmap);
+        void showSavedImageSuccess();
+        void showSavedImageFail();
+    }
 
-    int getBridgeType();
+    interface OnInteractionListener {
+        void loadPicture(Context context, String url);
+        void savePictureLocally(Context context);
+    }
 }

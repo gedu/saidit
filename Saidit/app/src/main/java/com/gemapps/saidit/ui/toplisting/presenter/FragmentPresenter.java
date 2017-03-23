@@ -19,6 +19,8 @@ package com.gemapps.saidit.ui.toplisting.presenter;
 import android.util.Log;
 
 import com.gemapps.saidit.busitem.EntryResponseBridge;
+import com.gemapps.saidit.busitem.OauthEventBridge;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
 import com.gemapps.saidit.ui.toplisting.TopListingAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -51,6 +53,13 @@ public class FragmentPresenter implements FragmentContract.OnInteractionListener
         mView.onPopulateList(response.getItems());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetworkResponseEvent(OauthEventBridge response){
+        Log.d(TAG, "onNetworkResponseEvent ");
+        System.out.print("EYYASDASDAS");
+        loadBasicListing();
+    }
+
     @Override
     public void onEventBusUnSubscribe(EventBus bus) {
         System.out.print("UNregister");
@@ -66,5 +75,10 @@ public class FragmentPresenter implements FragmentContract.OnInteractionListener
     public void updateListingView() {
         if (mAdapter.getItemCount() > 0) mView.hideEmptyView();
         else mView.showEmptyView();
+    }
+
+    @Override
+    public void loadBasicListing() {
+        PaginationManager.getInstance().onStart();
     }
 }

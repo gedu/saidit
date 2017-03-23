@@ -41,7 +41,7 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:visibility="gone"
-                tools:src="@drawable/ic_cloud_download_white_24px"/>
+                tools:src="@mipmap/ic_launcher_round"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

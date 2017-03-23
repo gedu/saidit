@@ -29,13 +29,13 @@ import android.widget.ImageView;
 import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterFragment;
 import com.gemapps.saidit.ui.model.TopListingItem;
-import com.gemapps.saidit.ui.paginator.PaginationManager;
 import com.gemapps.saidit.ui.picturedetail.PictureDetailActivity;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentContract;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentPresenter;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 public class TopListingFragment extends ButterFragment
         implements FragmentContract.View, TopListingAdapter.ListingListener {
 
+    private static final String LISTING_LIST_PREF = "saidit.LISTING_LIST_PREF";
     private FragmentContract.OnInteractionListener mInteractionListener;
     private TopListingAdapter mAdapter;
     private TopListingViewHelper mViewHelper;
@@ -69,6 +70,20 @@ public class TopListingFragment extends ButterFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewHelper = new TopListingViewHelper(view);
+
+        if(savedInstanceState == null) mInteractionListener.loadBasicListing();
+        else rebuildState(savedInstanceState);
+    }
+
+    private void rebuildState(Bundle savedInstanceState) {
+        if(savedInstanceState.containsKey(LISTING_LIST_PREF)) {
+            ArrayList<TopListingItem> listingItems = (ArrayList<TopListingItem>) savedInstanceState.get(LISTING_LIST_PREF);
+
+            if(listingItems != null && listingItems.size() > 0) onPopulateList(listingItems);
+            else mInteractionListener.loadBasicListing();
+        } else {
+            mInteractionListener.loadBasicListing();
+        }
     }
 
     @Override
@@ -78,15 +93,18 @@ public class TopListingFragment extends ButterFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        PaginationManager.getInstance().onStart();
-    }
-
-    @Override
     public void onStop() {
         mInteractionListener.onEventBusUnSubscribe(EventBus.getDefault());
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        if(mAdapter != null)
+            outState.putParcelableArrayList(LISTING_LIST_PREF, mAdapter.getListingItems());
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class RedditListingManager implements RedditContract.Manager {
 
     @Override
     public void authenticate(){
-        if (!isAuthenticated() || !mInteractionListener.isBearerValid()){
+        if (needToRefreshToken()){
             Log.d(TAG, "authenticate: ");
             mInteractionListener.findBearerAsync();
             mInteractionListener.doAuthentication();
@@ -71,10 +71,16 @@ public class RedditListingManager implements RedditContract.Manager {
 
     public void getTopListing(EventBus bus, String query,
                               @PaginationManager.PaginationType int pagType){
-        if(isAuthenticated()){
+        if(!needToRefreshToken()){
             new TopListingRequest(NetInjector.getClientAsync(), bus)
                     .getTopListing(query, pagType);
+        }else{
+            authenticate();
         }
+    }
+
+    private boolean needToRefreshToken(){
+        return !isAuthenticated() || !mInteractionListener.isBearerValid();
     }
 
     @Override

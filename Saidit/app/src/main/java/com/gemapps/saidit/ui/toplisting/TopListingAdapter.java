@@ -17,6 +17,7 @@
 package com.gemapps.saidit.ui.toplisting;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,9 @@ import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterViewHolder;
 import com.gemapps.saidit.ui.model.TopListingItem;
 import com.gemapps.saidit.util.DateUtil;
-import com.squareup.picasso.Picasso;
+import com.gemapps.saidit.util.PicassoUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,18 +43,19 @@ import butterknife.OnClick;
 public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.TopViewHolder> {
 
     private static final String TAG = "TopListingAdapter";
+
     public interface ListingListener {
         void onPictureClicked(TopListingItem listingItem, ImageView mPictureImage);
     }
 
     private final Context context;
-    private List<TopListingItem> items;
+    private List<TopListingItem> mListingItems;
     private ListingListener mListener;
 
-    public TopListingAdapter(Context context, List<TopListingItem> items,
+    public TopListingAdapter(Context context, List<TopListingItem> listingItems,
                              ListingListener listener) {
         this.context = context;
-        this.items = items;
+        this.mListingItems = listingItems;
         this.mListener = listener;
     }
 
@@ -66,7 +69,7 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
 
     @Override
     public void onBindViewHolder(TopViewHolder holder, int position) {
-        TopListingItem item = items.get(position);
+        TopListingItem item = mListingItems.get(position);
 
         holder.mAuthorNameText.setText(item.getAuthor());
         holder.mCreatedDateText.setText(DateUtil.getTimeAgo(item.getCreated()));
@@ -75,24 +78,32 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
         
         if(item.isThumbnailValid()){
             holder.mThumbnailImage.setVisibility(View.VISIBLE);
-            Picasso.with(context)
-                    .load(item.getThumbnail())
-                    .placeholder(R.color.grey_light_54)
-                    .into(holder.mThumbnailImage);
+            holder.mThumbnailImage.setContentDescription(getAvatarDescription(item.getAuthor()));
+            PicassoUtil.loadUrlImage(context,
+                    item.getThumbnail(),
+                    holder.mThumbnailImage);
         }
 
         if(item.isPictureValid()){
             holder.mPictureImage.setVisibility(View.VISIBLE);
-            Picasso.with(context)
-                    .load(item.getPictureUrl())
-                    .placeholder(R.color.grey_light_54)
-                    .into(holder.mPictureImage);
+            holder.mPictureImage.setContentDescription(item.getAuthor());
+            PicassoUtil.loadUrlImage(context,
+                    item.getPictureUrl(),
+                    holder.mPictureImage);
         }
+    }
+
+    private String getAvatarDescription(String author){
+        return context.getString(R.string.avatar_desc, author);
     }
 
     @Override
     public int getItemCount() {
-        return items == null? 0 : items.size();
+        return mListingItems == null? 0 : mListingItems.size();
+    }
+
+    public ArrayList<? extends Parcelable> getListingItems() {
+        return (ArrayList<? extends Parcelable>) mListingItems;
     }
 
     public class TopViewHolder extends ButterViewHolder {
@@ -117,7 +128,7 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
         @OnClick(R.id.picture_image)
         public void onPictureClick(){
             if(mListener != null)
-                mListener.onPictureClicked(items.get(getAdapterPosition()), mPictureImage);
+                mListener.onPictureClicked(mListingItems.get(getAdapterPosition()), mPictureImage);
         }
     }
 }

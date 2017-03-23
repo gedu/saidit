@@ -14,25 +14,26 @@
  *    limitations under the License.
  */
 
-package com.gemapps.saidit.busitem;
+package com.gemapps.saidit.ui.picturedetail;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
- * Created by edu on 3/22/17.
+ * Created by edu on 3/23/17.
  */
+@RunWith(MockitoJUnitRunner.class)
+public class PictureDetailActivityTest {
 
-public interface BusBridge {
+    private PictureDetailContract.OnInteractionListener mPresenter;
 
-    @IntDef(flag=true, value={ENTRY, PAGINATION, OAUTH})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface BusBridgeType{}
-    public static final int ENTRY = 0;
-    public static final int PAGINATION = 1;
-    public static final int OAUTH = 1<<1;
+    @Mock
+    private PictureDetailContract.View mView;
 
-    int getBridgeType();
+    @Before
+    public void setup(){
+        mPresenter = new PictureDetailPresenter(mView);
+    }
 }

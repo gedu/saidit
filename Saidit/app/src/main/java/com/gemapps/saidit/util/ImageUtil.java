@@ -26,8 +26,6 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by edu on 3/23/17.
@@ -35,25 +33,22 @@ import java.util.Date;
 
 public class ImageUtil {
     private static final String TAG = "ImageUtil";
-    public static void saveImage(Context context, Bitmap bitmap) {
+
+    public static boolean saveImage(Context context, Bitmap bitmap) {
 
         try {
             File file = createImageFile(context);
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
+            return saveImageIntoFile(bitmap, file);
+        } catch (IOException e) {
             e.printStackTrace();
-
+            return false;
         }
     }
 
     private static File createImageFile(Context context) throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp + "_";
+
+        String imageFileName = createFileName();
+//        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "SaidIt");
 
@@ -63,14 +58,26 @@ public class ImageUtil {
                 return null;
             }
         }
-//        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+
+        return File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 mediaStorageDir      /* directory */
         );
+    }
 
-        return image;
+    private static boolean saveImageIntoFile(Bitmap bitmap, File file) throws IOException {
+        if(file == null) return false;
+
+        FileOutputStream out = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        out.flush();
+        out.close();
+        return true;
+    }
+
+    private static String createFileName(){
+        return DateUtil.getToday() + "_";
     }
 
     private static Intent galleryAddPic(String filePath) {

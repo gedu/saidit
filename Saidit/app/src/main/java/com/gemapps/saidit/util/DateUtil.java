@@ -16,13 +16,17 @@
 
 package com.gemapps.saidit.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by edu on 3/22/17.
  */
 
 public class DateUtil {
+
+    public static final SimpleDateFormat FULL_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -55,5 +59,9 @@ public class DateUtil {
         }else{
             return "long time ago";
         }
+    }
+
+    public static String getToday(){
+        return FULL_DATE_FORMAT.format(new Date());
     }
 }

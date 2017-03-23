@@ -20,6 +20,8 @@ import android.app.Application;
 import android.util.Log;
 
 import com.gemapps.saidit.networking.RedditListingManager;
+import com.gemapps.saidit.ui.paginator.PaginationManager;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,8 +41,10 @@ public class SaiditApplication extends Application {
         EventBus.builder()
                 .logNoSubscriberMessages(false)
                 .installDefaultEventBus();
+        PaginationManager.getInstance().addEventBus(EventBus.getDefault());
         RedditListingManager.getInstance()
                 .init(Realm.getDefaultInstance())
                 .authenticate();
+        Picasso.with(this).setLoggingEnabled(true);
     }
 }

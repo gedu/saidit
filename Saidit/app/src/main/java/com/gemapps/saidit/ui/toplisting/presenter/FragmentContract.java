@@ -40,5 +40,6 @@ public interface FragmentContract {
         void onEventBusUnSubscribe(EventBus bus);
         void addAdapter(TopListingAdapter adapter);
         void updateListingView();
+        void loadBasicListing();
     }
 }

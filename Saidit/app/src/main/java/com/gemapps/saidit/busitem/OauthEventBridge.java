@@ -16,23 +16,14 @@
 
 package com.gemapps.saidit.busitem;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /**
- * Created by edu on 3/22/17.
+ * Created by edu on 3/23/17.
  */
 
-public interface BusBridge {
+public class OauthEventBridge implements BusBridge {
 
-    @IntDef(flag=true, value={ENTRY, PAGINATION, OAUTH})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface BusBridgeType{}
-    public static final int ENTRY = 0;
-    public static final int PAGINATION = 1;
-    public static final int OAUTH = 1<<1;
-
-    int getBridgeType();
+    @Override
+    public int getBridgeType() {
+        return OAUTH;
+    }
 }

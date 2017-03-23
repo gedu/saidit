@@ -16,8 +16,6 @@
 
 package com.gemapps.saidit.networking.request;
 
-import android.util.Log;
-
 import com.gemapps.saidit.busitem.OauthEventBridge;
 import com.gemapps.saidit.networking.RedditAPI;
 import com.gemapps.saidit.networking.RedditListingManager;
@@ -45,7 +43,6 @@ public class AuthenticationClientAsync extends BaseHttpClient implements RedditA
     public void authenticate(String url){
 
         if(!mRequestingAuthentication) {
-            Log.d(TAG, "authenticate: ");
             mRequestingAuthentication = true;
             Headers.Builder builder = new Headers.Builder();
             builder.add("Authorization", Credentials.basic(REDDIT_CLIENT_ID, REDDIT_PASSWORD));
@@ -60,7 +57,6 @@ public class AuthenticationClientAsync extends BaseHttpClient implements RedditA
     @Override
     protected void onSuccess(final String body, int tag) {
         mRequestingAuthentication = false;
-        Log.d(TAG, "onSuccess() called with: body = <" + body + ">");
         RedditListingManager.getInstance()
                 .getRealm()
                 .executeTransaction(new Realm.Transaction() {

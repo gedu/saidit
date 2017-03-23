@@ -51,7 +51,13 @@ public class TopEntriesDeserializer implements JsonDeserializer<TopEntries> {
         Gson gson = new Gson();
         for (JsonElement element : entries) {
             JsonElement entryData = element.getAsJsonObject().get("data");
+            JsonElement imagesPreview = entryData.getAsJsonObject().get("preview");
+            JsonArray sourceImages = imagesPreview.getAsJsonObject().get("images").getAsJsonArray();
+            JsonElement mainImage = sourceImages.get(0).getAsJsonObject().get("source");
+            JsonElement url = mainImage.getAsJsonObject().get("url");
+
             TopListingItem topItem = gson.fromJson(entryData, TopListingItem.class);
+            topItem.setPictureUrl(url.isJsonNull() ? "" : url.getAsString());
             topEntries.setEntry(topItem);
         }
         return topEntries;

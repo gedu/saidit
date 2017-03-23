@@ -6,4 +6,9 @@
     <string name="saidit_pic_trans_name">saidit_list_pic_trans_name</string>
     <string name="prev">Prev</string>
     <string name="next">Next</string>
+
+    <string name="title_activity_picture_detail">Picture</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="download">Download</string>
 </resources>

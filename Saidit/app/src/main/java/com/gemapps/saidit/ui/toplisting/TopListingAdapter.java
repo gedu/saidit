@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by edu on 3/22/17.
@@ -40,12 +41,19 @@ import butterknife.BindView;
 public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.TopViewHolder> {
 
     private static final String TAG = "TopListingAdapter";
+    public interface ListingListener {
+        void onPictureClicked(TopListingItem listingItem, ImageView mPictureImage);
+    }
+
     private final Context context;
     private List<TopListingItem> items;
+    private ListingListener mListener;
 
-    public TopListingAdapter(Context context, List<TopListingItem> items) {
+    public TopListingAdapter(Context context, List<TopListingItem> items,
+                             ListingListener listener) {
         this.context = context;
         this.items = items;
+        this.mListener = listener;
     }
 
     @Override
@@ -66,9 +74,17 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
         holder.mCommentsCountText.setText(item.getNumComments());
         
         if(item.isThumbnailValid()){
-            holder.mPictureImage.setVisibility(View.VISIBLE);
+            holder.mThumbnailImage.setVisibility(View.VISIBLE);
             Picasso.with(context)
                     .load(item.getThumbnail())
+                    .placeholder(R.color.grey_light_54)
+                    .into(holder.mThumbnailImage);
+        }
+
+        if(item.isPictureValid()){
+            holder.mPictureImage.setVisibility(View.VISIBLE);
+            Picasso.with(context)
+                    .load(item.getPictureUrl())
                     .placeholder(R.color.grey_light_54)
                     .into(holder.mPictureImage);
         }
@@ -76,19 +92,19 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
 
     @Override
     public int getItemCount() {
-        if (items == null) {
-            return 0;
-        }
-        return items.size();
+        return items == null? 0 : items.size();
     }
 
     public class TopViewHolder extends ButterViewHolder {
+
         @BindView(R.id.author_name_text)
         TextView mAuthorNameText;
         @BindView(R.id.created_date_text)
         TextView mCreatedDateText;
         @BindView(R.id.title_text)
         TextView mTitleText;
+        @BindView(R.id.thumbnail_image)
+        ImageView mThumbnailImage;
         @BindView(R.id.picture_image)
         ImageView mPictureImage;
         @BindView(R.id.comments_count_text)
@@ -96,6 +112,12 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
 
         public TopViewHolder(View view) {
             super(view);
+        }
+
+        @OnClick(R.id.picture_image)
+        public void onPictureClick(){
+            if(mListener != null)
+                mListener.onPictureClicked(items.get(getAdapterPosition()), mPictureImage);
         }
     }
 }

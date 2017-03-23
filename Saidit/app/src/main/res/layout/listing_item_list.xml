@@ -33,26 +33,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/author_name_text"
+            <ImageView
+                android:id="@+id/thumbnail_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                tools:src="@drawable/ic_cloud_download_white_24px"/>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:lines="1"
-                android:textAppearance="@style/SaiditTimestamp.SaiditUserName"
-                tools:text="My name"/>
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/created_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/SaiditTimestamp"
-                tools:text="21 Mar 2006"/>
+                <TextView
+                    android:id="@+id/author_name_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:lines="1"
+                    android:textAppearance="@style/SaiditTimestamp.SaiditUserName"
+                    tools:text="My name"/>
+
+                <TextView
+                    android:id="@+id/created_date_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/SaiditTimestamp"
+                    tools:text="21 Mar 2006"/>
 
 
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -60,8 +75,8 @@
             android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoLink="web"
             android:layout_marginBottom="8dp"
+            android:autoLink="web"
             android:textAppearance="@style/SaiditTimestamp.Comment"
             tools:text="My title super awesome"/>
 

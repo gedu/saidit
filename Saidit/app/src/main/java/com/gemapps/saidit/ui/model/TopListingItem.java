@@ -41,6 +41,8 @@ public class TopListingItem {
     @SerializedName("title")
     private String mTitle;
 
+    private transient String mPictureUrl;
+
     public TopListingItem() {
     }
 
@@ -90,6 +92,18 @@ public class TopListingItem {
 
     public void setTitle(String title) {
         mTitle = title;
+    }
+
+    public String getPictureUrl() {
+        return mPictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        mPictureUrl = pictureUrl;
+    }
+
+    public boolean isPictureValid(){
+        return mPictureUrl != null && mPictureUrl.length() > 0;
     }
 
     public boolean isThumbnailValid(){

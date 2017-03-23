@@ -3,6 +3,7 @@
           package="com.gemapps.saidit">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- Some Chromebooks don't support touch. It's very important to explicitly have this. -->
     <uses-feature
@@ -10,9 +11,9 @@
         android:required="false"/>
 
     <application
+        android:name=".SaiditApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:name=".SaiditApplication"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
@@ -23,6 +24,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.picturedetail.PictureDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_picture_detail"
+            android:parentActivityName=".ui.toplisting.TopListingActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gemapps.saidit.ui.toplisting.TopListingActivity"/>
         </activity>
     </application>
 

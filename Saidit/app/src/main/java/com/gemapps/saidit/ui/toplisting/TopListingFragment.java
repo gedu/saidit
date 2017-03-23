@@ -17,16 +17,20 @@
 package com.gemapps.saidit.ui.toplisting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.gemapps.saidit.R;
 import com.gemapps.saidit.ui.butter.ButterFragment;
 import com.gemapps.saidit.ui.model.TopListingItem;
 import com.gemapps.saidit.ui.paginator.PaginationManager;
+import com.gemapps.saidit.ui.picturedetail.PictureDetailActivity;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentContract;
 import com.gemapps.saidit.ui.toplisting.presenter.FragmentPresenter;
 
@@ -37,7 +41,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 
 public class TopListingFragment extends ButterFragment
-        implements FragmentContract.View {
+        implements FragmentContract.View, TopListingAdapter.ListingListener {
 
     private FragmentContract.OnInteractionListener mInteractionListener;
     private TopListingAdapter mAdapter;
@@ -87,7 +91,7 @@ public class TopListingFragment extends ButterFragment
 
     @Override
     public void onPopulateList(List<TopListingItem> listingItems) {
-        mAdapter = new TopListingAdapter(getActivity(), listingItems);
+        mAdapter = new TopListingAdapter(getActivity(), listingItems, this);
         mViewHelper.setAdapter(mAdapter);
         mInteractionListener.addAdapter(mAdapter);
         mInteractionListener.updateListingView();
@@ -102,6 +106,16 @@ public class TopListingFragment extends ButterFragment
     public void showEmptyView() {
         //todo; implement it
         mViewHelper.showLoading();
+    }
+
+    @Override
+    public void onPictureClicked(TopListingItem listingItem, ImageView mPictureImage) {
+
+        Intent intent = PictureDetailActivity.getInstance(getActivity(), listingItem.getPictureUrl());
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(getActivity(),
+                        mPictureImage, getString(R.string.saidit_pic_trans_name));
+        startActivity(intent, options.toBundle());
     }
 }
 

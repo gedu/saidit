@@ -33,6 +33,8 @@ public class TopListingActivity extends ButterActivity
         implements ActivityContract.View {
 
     private static final String TAG = "TopListingActivity";
+    private static final String PREV_STATUS_KEY = "saidit.PREV_STATUS_KEY";
+    private static final String NEXT_STATUS_KEY = "saidit.NEXT_STATUS_KEY";
     @BindView(R.id.prev_button_text)
     View mPrevButton;
     @BindView(R.id.next_button_text)
@@ -48,6 +50,14 @@ public class TopListingActivity extends ButterActivity
         mInteractionListener = new ActivityPresenter(this);
         mFragment = (TopListingFragment) getFragmentManager()
                 .findFragmentById(R.id.top_listing_content_fragment);
+        if(savedInstanceState != null) rebuildState(savedInstanceState);
+    }
+
+    private void rebuildState(Bundle savedInstanceState) {
+        if(savedInstanceState.containsKey(PREV_STATUS_KEY)){
+            mPrevButton.setEnabled(savedInstanceState.getBoolean(PREV_STATUS_KEY));
+            mNextButton.setEnabled(savedInstanceState.getBoolean(NEXT_STATUS_KEY));
+        }
     }
 
     @Override
@@ -60,6 +70,14 @@ public class TopListingActivity extends ButterActivity
     protected void onStop() {
         mInteractionListener.onEventBusUnSubscribe(EventBus.getDefault());
         super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putBoolean(PREV_STATUS_KEY, mPrevButton.isEnabled());
+        outState.putBoolean(NEXT_STATUS_KEY, mNextButton.isEnabled());
+        super.onSaveInstanceState(outState);
     }
 
     @OnClick(R.id.prev_button_text)
@@ -77,6 +95,7 @@ public class TopListingActivity extends ButterActivity
     @Override
     public void onDisablePrevButton() {
         mPrevButton.setEnabled(false);
+        mFragment.hideLoading();
     }
 
     @Override

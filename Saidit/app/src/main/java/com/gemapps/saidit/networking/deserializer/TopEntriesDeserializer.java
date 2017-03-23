@@ -16,8 +16,6 @@
 
 package com.gemapps.saidit.networking.deserializer;
 
-import android.util.Log;
-
 import com.gemapps.saidit.ui.model.TopEntries;
 import com.gemapps.saidit.ui.model.TopListingItem;
 import com.google.gson.Gson;
@@ -38,30 +36,63 @@ public class TopEntriesDeserializer implements JsonDeserializer<TopEntries> {
     @Override
     public TopEntries deserialize(JsonElement json, Type typeOfT,
                                             JsonDeserializationContext context) throws JsonParseException {
+        return parse(json);
+    }
+
+    private TopEntries parse(JsonElement json){
         JsonElement topData = json.getAsJsonObject().get("data");
-        JsonElement before = topData.getAsJsonObject().get("before");
-        JsonElement after = topData.getAsJsonObject().get("after");
-        Log.d(TAG, "before: "+before);
-        Log.d(TAG, "after: "+after);
         JsonArray entries = topData.getAsJsonObject().get("children").getAsJsonArray();
 
-        TopEntries topEntries = new TopEntries();
-        topEntries.setBefore(!before.isJsonNull() ? before.getAsString() : "");
-        topEntries.setAfter(!after.isJsonNull() ? after.getAsString() : "");
+        TopEntries topEntries = buildEntries(topData);
         Gson gson = new Gson();
-        for (JsonElement element : entries) {
-            JsonElement entryData = element.getAsJsonObject().get("data");
-            TopListingItem topItem = gson.fromJson(entryData, TopListingItem.class);
-            JsonElement imagesPreview = entryData.getAsJsonObject().get("preview");
-            if(imagesPreview != null && !imagesPreview.isJsonNull()) {
-                JsonArray sourceImages = imagesPreview.getAsJsonObject().get("images").getAsJsonArray();
-                JsonElement mainImage = sourceImages.get(0).getAsJsonObject().get("source");
-                JsonElement url = mainImage.getAsJsonObject().get("url");
-                topItem.setPictureUrl(url.isJsonNull() ? "" : url.getAsString());
-            }
-
+        for (JsonElement entryElement : entries) {
+            TopListingItem topItem = buildFrom(gson, entryElement);
             topEntries.setEntry(topItem);
         }
         return topEntries;
+    }
+
+    private TopEntries buildEntries(JsonElement topData){
+        TopEntries topEntries = new TopEntries();
+
+        String before = getBeforeTag(topData);
+        String after = getAfterTag(topData);
+
+        topEntries.setBefore(before);
+        topEntries.setAfter(after);
+
+        return topEntries;
+    }
+
+    private String getBeforeTag(JsonElement data){
+        JsonElement before = data.getAsJsonObject().get("before");
+        return !before.isJsonNull() ? before.getAsString() : "";
+    }
+
+    private String getAfterTag(JsonElement data){
+        JsonElement after = data.getAsJsonObject().get("after");
+        return !after.isJsonNull() ? after.getAsString() : "";
+    }
+
+    private TopListingItem buildFrom(Gson gson, JsonElement element){
+        JsonElement entryData = element.getAsJsonObject().get("data");
+        TopListingItem topItem = gson.fromJson(entryData, TopListingItem.class);
+        topItem.setPictureUrl(getPictureUrl(entryData));
+        return topItem;
+    }
+
+    private String getPictureUrl(JsonElement entryData){
+        JsonElement imagesPreview = entryData.getAsJsonObject().get("preview");
+        if(imagesPreview != null && !imagesPreview.isJsonNull()) {
+            JsonElement image = getFirstImage(imagesPreview);
+            JsonElement url = image.getAsJsonObject().get("url");
+            return url.isJsonNull() ? "" : url.getAsString();
+        }
+        return "";
+    }
+
+    private JsonElement getFirstImage(JsonElement entryImages){
+        JsonArray imageSource = entryImages.getAsJsonObject().get("images").getAsJsonArray();
+        return imageSource.get(0).getAsJsonObject().get("source");
     }
 }

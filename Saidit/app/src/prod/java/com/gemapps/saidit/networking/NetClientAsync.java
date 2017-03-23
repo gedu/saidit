@@ -16,6 +16,8 @@
 
 package com.gemapps.saidit.networking;
 
+import android.util.Log;
+
 import com.gemapps.saidit.busitem.EntryResponseBridge;
 import com.gemapps.saidit.networking.inject.NetBridge;
 import com.gemapps.saidit.networking.request.BaseHttpClient;
@@ -72,6 +74,7 @@ public class NetClientAsync extends BaseHttpClient
 
     @Override
     protected void onFail() {
+        Log.d(TAG, "onFail: ");
         mBus.post(new EntryResponseBridge(new ArrayList<TopListingItem>()));
     }
 }

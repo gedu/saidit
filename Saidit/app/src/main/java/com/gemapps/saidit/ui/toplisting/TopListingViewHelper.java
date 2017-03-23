@@ -38,11 +38,13 @@ import butterknife.ButterKnife;
 
 public class TopListingViewHelper {
 
+    private static final String TAG = "TopListingViewHelper";
     interface ErrorViewListener {
         void onTryAgain();
     }
 
     private static final int LIST_ORIENTATION = LinearLayoutManager.VERTICAL;
+
     @BindView(R.id.oauth_error_stub)
     ViewStub mOauthErrorStub;
     @BindView(R.id.empty_list_stub)
@@ -70,6 +72,16 @@ public class TopListingViewHelper {
 
     private void setupRecycler() {
         mTopListingRecycler.setLayoutManager(getLayoutManager());
+        mTopListingRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int[] pos = mLayoutManager.findFirstVisibleItemPositions(null);
+
+                mHeader.setVisibility(pos[0] > 0 ? View.INVISIBLE : View.VISIBLE);
+            }
+        });
     }
 
     private StaggeredGridLayoutManager getLayoutManager() {
@@ -121,6 +133,18 @@ public class TopListingViewHelper {
 
     public void hideOauthError(){
         if(mOauthErrorView != null) mOauthErrorView.setVisibility(View.GONE);
+    }
+
+    public void hideRecyclerView(){
+        mTopListingRecycler.setVisibility(View.INVISIBLE);
+    }
+
+    public void showRecyclerView(){
+        mTopListingRecycler.setVisibility(View.VISIBLE);
+    }
+
+    public void sendToTheTop(){
+        mTopListingRecycler.scrollToPosition(0);
     }
 
 

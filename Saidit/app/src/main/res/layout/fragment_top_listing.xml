@@ -5,6 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.gemapps.saidit.ui.toplisting.TopListingFragment">
 
-    <include layout="@layout/top_listing_content"/>
+    <include layout="@layout/top_listing_content" />
 
 </android.support.design.widget.CoordinatorLayout>

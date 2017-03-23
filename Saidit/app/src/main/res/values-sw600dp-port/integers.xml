@@ -16,8 +16,5 @@
   -->
 
 <resources>
-    <dimen name="list_elevation">4dp</dimen>
-    <dimen name="margin_point_width">600dp</dimen>
-    <item name="match_parent" format="integer" type="dimen">-1</item>
-    <item name="wrap_content" format="integer" type="dimen">-2</item>
+    <integer name="amount_of_columns">2</integer>
 </resources>

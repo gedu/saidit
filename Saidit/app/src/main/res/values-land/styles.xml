@@ -16,8 +16,11 @@
   -->
 
 <resources>
-    <dimen name="list_elevation">4dp</dimen>
-    <dimen name="margin_point_width">600dp</dimen>
-    <item name="match_parent" format="integer" type="dimen">-1</item>
-    <item name="wrap_content" format="integer" type="dimen">-2</item>
+    <style name="AppTheme.MarginPoint">
+
+        <item name="android:layout_width">@dimen/margin_point_width</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">center_horizontal|top</item>
+    </style>
 </resources>

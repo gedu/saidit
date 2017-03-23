@@ -8,13 +8,15 @@
     android:orientation="vertical"
     tools:context="com.gemapps.saidit.ui.toplisting.TopListingActivity">
 
-    <fragment
-        android:id="@+id/top_listing_content_fragment"
-        android:name="com.gemapps.saidit.ui.toplisting.TopListingFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_top_listing"/>
+    <FrameLayout
+        style="@style/AppTheme.MarginPoint">
+        <fragment
+            android:id="@+id/top_listing_content_fragment"
+            android:name="com.gemapps.saidit.ui.toplisting.TopListingFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_top_listing"/>
+    </FrameLayout>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

@@ -57,7 +57,12 @@ public class TopListingFragment extends ButterFragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mInteractionListener = new FragmentPresenter(this);
+        setupPresenter();
+    }
+
+    private void setupPresenter(){
+        //Some tablets/android don't call the onAttach method
+        if(mInteractionListener == null) mInteractionListener = new FragmentPresenter(this);
     }
 
     @Override
@@ -72,9 +77,13 @@ public class TopListingFragment extends ButterFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewHelper = new TopListingViewHelper(view);
-
-        if(savedInstanceState == null) mInteractionListener.loadBasicListing();
+        setupPresenter();
+        if(savedInstanceState == null) loadFirstContent();
         else rebuildState(savedInstanceState);
+    }
+
+    private void loadFirstContent(){
+        mInteractionListener.loadBasicListing();
     }
 
     private void rebuildState(Bundle savedInstanceState) {
@@ -121,22 +130,34 @@ public class TopListingFragment extends ButterFragment
             mAdapter = new TopListingAdapter(getActivity(), listingItems, this);
             mViewHelper.setAdapter(mAdapter);
             mInteractionListener.addAdapter(mAdapter);
+        } else {
+            mAdapter.setItems(listingItems);
+            sendToTheTop();
         }
-        else mAdapter.setItems(listingItems);
     }
 
     public void showLoading(){
         mViewHelper.showLoading();
     }
 
+    public void hideLoading() {
+        mViewHelper.hideLoading();
+    }
+
+    public void sendToTheTop(){
+        mViewHelper.sendToTheTop();
+    }
+
     @Override
     public void hideEmptyView() {
         mViewHelper.hideLoading();
         mViewHelper.hideEmptyView();
+        mViewHelper.showRecyclerView();
     }
 
     @Override
     public void showEmptyView() {
+        mViewHelper.hideRecyclerView();
         mViewHelper.hideLoading();
         mViewHelper.showEmptyView(new TopListingViewHelper.ErrorViewListener() {
             @Override
@@ -149,6 +170,7 @@ public class TopListingFragment extends ButterFragment
 
     @Override
     public void showOauthError() {
+        mViewHelper.hideRecyclerView();
         mViewHelper.hideLoading();
         mViewHelper.showOauthError(new TopListingViewHelper.ErrorViewListener() {
             @Override
@@ -161,7 +183,9 @@ public class TopListingFragment extends ButterFragment
 
     @Override
     public void hideOauthError() {
+        mViewHelper.hideLoading();
         mViewHelper.hideOauthError();
+        mViewHelper.showRecyclerView();
     }
 
     @Override

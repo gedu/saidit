@@ -29,6 +29,7 @@ public interface PictureDetailContract {
         void setPicture(Bitmap bitmap);
         void showSavedImageSuccess();
         void showSavedImageFail();
+        void showSavedImagePermissionDenied();
     }
 
     interface OnInteractionListener {

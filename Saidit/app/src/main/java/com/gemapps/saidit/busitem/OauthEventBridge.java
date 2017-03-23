@@ -16,11 +16,33 @@
 
 package com.gemapps.saidit.busitem;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by edu on 3/23/17.
  */
 
 public class OauthEventBridge implements BusBridge {
+
+    @IntDef(flag=true, value={SUCCESS, FAIL})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface OauthState {}
+    public static final int SUCCESS = 0;
+    public static final int FAIL = 1;
+
+    private @OauthState
+    int mState;
+
+    public OauthEventBridge(int state) {
+        mState = state;
+    }
+
+    public int getState() {
+        return mState;
+    }
 
     @Override
     public int getBridgeType() {

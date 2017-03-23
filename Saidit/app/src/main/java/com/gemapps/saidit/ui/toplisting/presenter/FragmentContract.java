@@ -33,6 +33,8 @@ public interface FragmentContract {
         void onPopulateList(List<TopListingItem> listingItems);
         void hideEmptyView();
         void showEmptyView();
+        void showOauthError();
+        void hideOauthError();
     }
 
     interface OnInteractionListener {

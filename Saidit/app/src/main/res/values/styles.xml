@@ -39,4 +39,9 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="AppTheme.ErrorLayout">
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_marginBottom">32dp</item>
+    </style>
+
 </resources>

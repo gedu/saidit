@@ -18,11 +18,14 @@ package com.gemapps.saidit.networking.request;
 
 import android.util.Log;
 
+import com.gemapps.saidit.busitem.OauthEventBridge;
 import com.gemapps.saidit.networking.RedditAPI;
 import com.gemapps.saidit.networking.RedditListingManager;
 import com.gemapps.saidit.networking.model.Bearer;
 import com.gemapps.saidit.util.Util;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.realm.Realm;
 import okhttp3.Credentials;
@@ -37,19 +40,26 @@ import okhttp3.RequestBody;
 public class AuthenticationClientAsync extends BaseHttpClient implements RedditAPI {
 
     private static final String TAG = "AuthenticationClientAsy";
+    private static boolean mRequestingAuthentication;
 
     public void authenticate(String url){
-        Headers.Builder builder = new Headers.Builder();
-        builder.add("Authorization", Credentials.basic(REDDIT_CLIENT_ID, REDDIT_PASSWORD));
-        RequestBody body = new FormBody.Builder()
-                .add(GRANT_TYPE_KEY, GRANT_TYPE_VALUE)
-                .add(DEVICE_ID_KEY, Util.getRandomID()).build();
 
-        doPost(url, builder.build(), body);
+        if(!mRequestingAuthentication) {
+            Log.d(TAG, "authenticate: ");
+            mRequestingAuthentication = true;
+            Headers.Builder builder = new Headers.Builder();
+            builder.add("Authorization", Credentials.basic(REDDIT_CLIENT_ID, REDDIT_PASSWORD));
+            RequestBody body = new FormBody.Builder()
+                    .add(GRANT_TYPE_KEY, GRANT_TYPE_VALUE)
+                    .add(DEVICE_ID_KEY, Util.getRandomID()).build();
+
+            doPost(url, builder.build(), body);
+        }
     }
 
     @Override
     protected void onSuccess(final String body, int tag) {
+        mRequestingAuthentication = false;
         Log.d(TAG, "onSuccess() called with: body = <" + body + ">");
         RedditListingManager.getInstance()
                 .getRealm()
@@ -60,10 +70,12 @@ public class AuthenticationClientAsync extends BaseHttpClient implements RedditA
                         realm.insertOrUpdate(bearer);
                     }
                 });
+        EventBus.getDefault().post(new OauthEventBridge(OauthEventBridge.SUCCESS));
     }
 
     @Override
     protected void onFail() {
-        Log.w(TAG, "onFail: ");
+        mRequestingAuthentication = false;
+        EventBus.getDefault().post(new OauthEventBridge(OauthEventBridge.FAIL));
     }
 }

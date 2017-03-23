@@ -16,8 +16,6 @@
 
 package com.gemapps.saidit.ui.toplisting.presenter;
 
-import android.util.Log;
-
 import com.gemapps.saidit.busitem.EntryResponseBridge;
 import com.gemapps.saidit.busitem.OauthEventBridge;
 import com.gemapps.saidit.ui.paginator.PaginationManager;
@@ -48,21 +46,17 @@ public class FragmentPresenter implements FragmentContract.OnInteractionListener
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkResponseEvent(EntryResponseBridge response){
-        Log.d(TAG, "onNetworkResponseEvent "+response.getItems().size());
-        System.out.print("EYYASDASDAS");
         mView.onPopulateList(response.getItems());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkResponseEvent(OauthEventBridge response){
-        Log.d(TAG, "onNetworkResponseEvent ");
-        System.out.print("EYYASDASDAS");
-        loadBasicListing();
+        if(response.getState() == OauthEventBridge.SUCCESS) loadBasicListing();
+        else mView.showOauthError();
     }
 
     @Override
     public void onEventBusUnSubscribe(EventBus bus) {
-        System.out.print("UNregister");
         bus.unregister(this);
     }
 
@@ -73,6 +67,7 @@ public class FragmentPresenter implements FragmentContract.OnInteractionListener
 
     @Override
     public void updateListingView() {
+        mView.hideOauthError();
         if (mAdapter.getItemCount() > 0) mView.hideEmptyView();
         else mView.showEmptyView();
     }

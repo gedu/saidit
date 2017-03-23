@@ -16,16 +16,17 @@
 
 package com.gemapps.saidit.networking;
 
-import android.util.Log;
-
 import com.gemapps.saidit.busitem.EntryResponseBridge;
 import com.gemapps.saidit.networking.inject.NetBridge;
 import com.gemapps.saidit.networking.request.BaseHttpClient;
 import com.gemapps.saidit.ui.model.TopEntries;
+import com.gemapps.saidit.ui.model.TopListingItem;
 import com.gemapps.saidit.ui.paginator.PaginationManager;
 import com.gemapps.saidit.util.GsonUtil;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 
 /**
  * Created by edu on 3/21/17.
@@ -71,7 +72,6 @@ public class NetClientAsync extends BaseHttpClient
 
     @Override
     protected void onFail() {
-        // TODO: 3/21/17  handle this error
-        Log.w(TAG, "onFail: ");
+        mBus.post(new EntryResponseBridge(new ArrayList<TopListingItem>()));
     }
 }

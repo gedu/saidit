@@ -13,7 +13,12 @@
     <string name="download">Download</string>
 
     <string name="avatar_desc">%1$s avatar</string>
+    <string name="picture_desc">%1$s picture</string>
     <string name="image_save_success">Saved</string>
     <string name="image_save_fail">Fail</string>
     <string name="try_again">Try again</string>
+    <string name="image_save_permission_denied">No permission to save</string>
+    <string name="grant_permission">Grant it</string>
+    <string name="authentication_fail_msg">Connection to Reddit failed</string>
+    <string name="empty_listing_msg">Tried the best but couldn\'t find anything</string>
 </resources>

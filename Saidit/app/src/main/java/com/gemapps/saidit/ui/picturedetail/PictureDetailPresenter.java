@@ -62,8 +62,10 @@ public class PictureDetailPresenter implements PictureDetailContract.OnInteracti
 
     @Override
     public void savePictureLocally(Context context) {
-        boolean success = ImageUtil.saveImage(context, mCurrentPic);
-        if (success) mView.showSavedImageSuccess();
+        Log.d(TAG, "savePictureLocally: "+mCurrentPic);
+        int state = ImageUtil.saveImage(context, mCurrentPic);
+        if (state == ImageUtil.SAVED) mView.showSavedImageSuccess();
+        else if (state == ImageUtil.PERMISSION_FAIL) mView.showSavedImagePermissionDenied();
         else mView.showSavedImageFail();
     }
 }

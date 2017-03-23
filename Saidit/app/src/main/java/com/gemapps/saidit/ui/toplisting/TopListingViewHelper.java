@@ -16,11 +16,11 @@
 
 package com.gemapps.saidit.ui.toplisting;
 
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 
@@ -28,6 +28,7 @@ import com.gemapps.saidit.R;
 import com.gemapps.saidit.util.ViewUtil;
 
 import butterknife.BindDimen;
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -37,7 +38,15 @@ import butterknife.ButterKnife;
 
 public class TopListingViewHelper {
 
+    interface ErrorViewListener {
+        void onTryAgain();
+    }
+
     private static final int LIST_ORIENTATION = LinearLayoutManager.VERTICAL;
+    @BindView(R.id.oauth_error_stub)
+    ViewStub mOauthErrorStub;
+    @BindView(R.id.empty_list_stub)
+    ViewStub mEmptyListStub;
     @BindView(R.id.saidit_header_container)
     View mHeader;
     @BindView(R.id.progressBar)
@@ -46,8 +55,13 @@ public class TopListingViewHelper {
     RecyclerView mTopListingRecycler;
     @BindDimen(R.dimen.list_elevation)
     int ELEVATION;
+    @BindInt(R.integer.amount_of_columns)
+    int AMOUNT_OF_COLUMNS;
 
-    private GridLayoutManager mLayoutManager;
+    private View mOauthErrorView;
+    private View mEmptyListView;
+
+    private StaggeredGridLayoutManager mLayoutManager;
 
     public TopListingViewHelper(View root) {
         ButterKnife.bind(this, root);
@@ -58,9 +72,9 @@ public class TopListingViewHelper {
         mTopListingRecycler.setLayoutManager(getLayoutManager());
     }
 
-    private GridLayoutManager getLayoutManager() {
-        mLayoutManager = new GridLayoutManager(mTopListingRecycler.getContext(),
-                1, LIST_ORIENTATION, false);
+    private StaggeredGridLayoutManager getLayoutManager() {
+
+        mLayoutManager = new StaggeredGridLayoutManager(AMOUNT_OF_COLUMNS, LIST_ORIENTATION);
         return mLayoutManager;
     }
 
@@ -72,28 +86,6 @@ public class TopListingViewHelper {
     private void updateRecyclerUI() {
 
         addPaddingTopPadding();
-        // forward clicks to the description view
-        mTopListingRecycler.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                final int firstVisible = mLayoutManager.findFirstVisibleItemPosition();
-
-                if (firstVisible > 0) return false;
-
-                if (mTopListingRecycler.getAdapter().getItemCount() == 0)
-                    return mHeader.dispatchTouchEvent(event);
-
-                final RecyclerView.ViewHolder vh = mTopListingRecycler.findViewHolderForAdapterPosition(0);
-                if (vh == null) return false;
-
-                if (event.getY() < vh.itemView.getTop())
-                    return mHeader.dispatchTouchEvent(event);
-
-                return false;
-            }
-        });
-
         mTopListingRecycler.setVisibility(View.VISIBLE);
         mTopListingRecycler.setElevation(ELEVATION);
     }
@@ -113,6 +105,41 @@ public class TopListingViewHelper {
             mHeader.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         }
     };
+
+    public void showOauthError(final ErrorViewListener listener){
+        if(mOauthErrorView == null) mOauthErrorView = mOauthErrorStub.inflate();
+        else mOauthErrorView.setVisibility(View.VISIBLE);
+
+        mOauthErrorView.findViewById(R.id.try_again_button)
+                .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onTryAgain();
+            }
+        });
+    }
+
+    public void hideOauthError(){
+        if(mOauthErrorView != null) mOauthErrorView.setVisibility(View.GONE);
+    }
+
+
+    public void showEmptyView(final ErrorViewListener listener){
+        if(mEmptyListView == null) mEmptyListView = mEmptyListStub.inflate();
+        else mEmptyListView.setVisibility(View.VISIBLE);
+
+        mEmptyListView.findViewById(R.id.try_again_button)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onTryAgain();
+                    }
+                });
+    }
+
+    public void hideEmptyView(){
+        if(mEmptyListView != null) mEmptyListView.setVisibility(View.GONE);
+    }
 
     public void hideLoading() {
         mProgressBar.setVisibility(View.INVISIBLE);

@@ -86,7 +86,7 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
 
         if(item.isPictureValid()){
             holder.mPictureImage.setVisibility(View.VISIBLE);
-            holder.mPictureImage.setContentDescription(item.getAuthor());
+            holder.mPictureImage.setContentDescription(getPictureDescription(item.getAuthor()));
             PicassoUtil.loadUrlImage(context,
                     item.getPictureUrl(),
                     holder.mPictureImage);
@@ -95,6 +95,16 @@ public class TopListingAdapter extends RecyclerView.Adapter<TopListingAdapter.To
 
     private String getAvatarDescription(String author){
         return context.getString(R.string.avatar_desc, author);
+    }
+
+    private String getPictureDescription(String author){
+        return context.getString(R.string.picture_desc, author);
+    }
+
+    public void setItems(List<TopListingItem> listingItems){
+        mListingItems.clear();
+        mListingItems.addAll(listingItems);
+        notifyItemRangeChanged(0, listingItems.size());
     }
 
     @Override

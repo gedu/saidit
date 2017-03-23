@@ -16,8 +16,6 @@
 
 package com.gemapps.saidit.ui.toplisting.presenter;
 
-import android.util.Log;
-
 import com.gemapps.saidit.busitem.PaginationStateBridge;
 import com.gemapps.saidit.ui.paginator.PaginationManager;
 
@@ -45,8 +43,6 @@ public class ActivityPresenter implements ActivityContract.OnInteractionListener
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkResponseEvent(PaginationStateBridge response) {
-        Log.d(TAG, "onNetworkResponseEvent ");
-        System.out.print("activ");
         int state = response.getState();
         onPaginationStateChanged(state);
     }

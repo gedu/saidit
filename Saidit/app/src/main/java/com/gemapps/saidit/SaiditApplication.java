@@ -17,11 +17,9 @@
 package com.gemapps.saidit;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.gemapps.saidit.networking.RedditListingManager;
 import com.gemapps.saidit.ui.paginator.PaginationManager;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -36,7 +34,6 @@ public class SaiditApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate: ");
         Realm.init(this);
         EventBus.builder()
                 .logNoSubscriberMessages(false)
@@ -45,6 +42,5 @@ public class SaiditApplication extends Application {
         RedditListingManager.getInstance()
                 .init(Realm.getDefaultInstance())
                 .authenticate();
-        Picasso.with(this).setLoggingEnabled(true);
     }
 }

@@ -21,11 +21,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by edu on 3/23/17.
@@ -33,15 +36,23 @@ import java.io.IOException;
 
 public class ImageUtil {
     private static final String TAG = "ImageUtil";
+    private static final String PERMISSION_DENIED = "Permission denied";
+    @IntDef(flag=true, value={SAVED, UNKNOWN_FAIL, PERMISSION_FAIL})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ImageSaveState{}
+    public static final int SAVED = 0;
+    public static final int UNKNOWN_FAIL = 1;
+    public static final int PERMISSION_FAIL = 1<<1;
 
-    public static boolean saveImage(Context context, Bitmap bitmap) {
+    public static @ImageSaveState int saveImage(Context context, Bitmap bitmap) {
 
         try {
             File file = createImageFile(context);
-            return saveImageIntoFile(bitmap, file);
+            return saveImageIntoFile(bitmap, file) ? SAVED : UNKNOWN_FAIL;
         } catch (IOException e) {
+            Log.d(TAG, "saveImage: "+e.getLocalizedMessage());
             e.printStackTrace();
-            return false;
+            return e.getLocalizedMessage().equals(PERMISSION_DENIED) ? PERMISSION_FAIL : UNKNOWN_FAIL;
         }
     }
 

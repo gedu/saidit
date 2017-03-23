@@ -32,18 +32,22 @@ import butterknife.OnClick;
 public class TopListingActivity extends ButterActivity
         implements ActivityContract.View {
 
+    private static final String TAG = "TopListingActivity";
     @BindView(R.id.prev_button_text)
     View mPrevButton;
     @BindView(R.id.next_button_text)
     View mNextButton;
 
     private ActivityContract.OnInteractionListener mInteractionListener;
+    private TopListingFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_listing);
         mInteractionListener = new ActivityPresenter(this);
+        mFragment = (TopListingFragment) getFragmentManager()
+                .findFragmentById(R.id.top_listing_content_fragment);
     }
 
     @Override
@@ -60,11 +64,13 @@ public class TopListingActivity extends ButterActivity
 
     @OnClick(R.id.prev_button_text)
     public void onPrevClick(){
+        mFragment.showLoading();
         mInteractionListener.onPrevClicked();
     }
 
     @OnClick(R.id.next_button_text)
     public void onNextClick(){
+        mFragment.showLoading();
         mInteractionListener.onNextClicked();
     }
 

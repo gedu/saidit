@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.gemapps.saidit.R;
+import com.gemapps.saidit.networking.RedditListingManager;
 import com.gemapps.saidit.ui.butter.ButterFragment;
 import com.gemapps.saidit.ui.model.TopListingItem;
 import com.gemapps.saidit.ui.picturedetail.PictureDetailActivity;
@@ -43,6 +44,7 @@ import butterknife.ButterKnife;
 public class TopListingFragment extends ButterFragment
         implements FragmentContract.View, TopListingAdapter.ListingListener {
 
+    private static final String TAG = "TopListingFragment";
     private static final String LISTING_LIST_PREF = "saidit.LISTING_LIST_PREF";
     private FragmentContract.OnInteractionListener mInteractionListener;
     private TopListingAdapter mAdapter;
@@ -109,21 +111,57 @@ public class TopListingFragment extends ButterFragment
 
     @Override
     public void onPopulateList(List<TopListingItem> listingItems) {
-        mAdapter = new TopListingAdapter(getActivity(), listingItems, this);
-        mViewHelper.setAdapter(mAdapter);
-        mInteractionListener.addAdapter(mAdapter);
+        updateAdapter(listingItems);
+
         mInteractionListener.updateListingView();
+    }
+
+    private void updateAdapter(List<TopListingItem> listingItems){
+        if(mAdapter == null) {
+            mAdapter = new TopListingAdapter(getActivity(), listingItems, this);
+            mViewHelper.setAdapter(mAdapter);
+            mInteractionListener.addAdapter(mAdapter);
+        }
+        else mAdapter.setItems(listingItems);
+    }
+
+    public void showLoading(){
+        mViewHelper.showLoading();
     }
 
     @Override
     public void hideEmptyView() {
         mViewHelper.hideLoading();
+        mViewHelper.hideEmptyView();
     }
 
     @Override
     public void showEmptyView() {
-        //todo; implement it
-        mViewHelper.showLoading();
+        mViewHelper.hideLoading();
+        mViewHelper.showEmptyView(new TopListingViewHelper.ErrorViewListener() {
+            @Override
+            public void onTryAgain() {
+                mViewHelper.showLoading();
+                mInteractionListener.loadBasicListing();
+            }
+        });
+    }
+
+    @Override
+    public void showOauthError() {
+        mViewHelper.hideLoading();
+        mViewHelper.showOauthError(new TopListingViewHelper.ErrorViewListener() {
+            @Override
+            public void onTryAgain() {
+                mViewHelper.showLoading();
+                RedditListingManager.getInstance().authenticate();
+            }
+        });
+    }
+
+    @Override
+    public void hideOauthError() {
+        mViewHelper.hideOauthError();
     }
 
     @Override

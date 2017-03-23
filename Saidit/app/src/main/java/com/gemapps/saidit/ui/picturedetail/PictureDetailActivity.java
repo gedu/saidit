@@ -16,17 +16,20 @@
 
 package com.gemapps.saidit.ui.picturedetail;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,6 +46,8 @@ public class PictureDetailActivity extends ButterActivity
     private static final String TAG = "PictureDetailActivity";
     private static final String PIC_URL = "saidit.PIC_URL";
     private static final int UI_ANIMATION_DELAY = 200;
+    private static final int STORAGE_PERMISSION_CODE = 1;
+
     @BindView(R.id.fullscreen_content)
     View mContentView;
     @BindView(R.id.picture_image)
@@ -64,6 +69,18 @@ public class PictureDetailActivity extends ButterActivity
         String url = getIntent().getStringExtra(PIC_URL);
         mInteractionListener = new PictureDetailPresenter(this);
         mInteractionListener.loadPicture(this, url);
+        if(!hasStoragePermission()) requestStoragePermission();
+    }
+
+    private boolean hasStoragePermission(){
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestStoragePermission(){
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                STORAGE_PERMISSION_CODE);
     }
 
     @Override
@@ -85,7 +102,6 @@ public class PictureDetailActivity extends ButterActivity
 
     @OnClick(R.id.download_button_text)
     public void onDownloadClick(){
-        Log.d(TAG, "onDownloadClick: ");
         mInteractionListener.savePictureLocally(this);
     }
 
@@ -131,6 +147,19 @@ public class PictureDetailActivity extends ButterActivity
                     @Override
                     public void onClick(View v) {
                         mInteractionListener.savePictureLocally(v.getContext());
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void showSavedImagePermissionDenied() {
+        Snackbar.make(mContentView, R.string.image_save_permission_denied,
+                BaseTransientBottomBar.LENGTH_LONG)
+                .setAction(R.string.grant_permission, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestStoragePermission();
                     }
                 })
                 .show();

@@ -32,27 +32,20 @@
             android:layout_width="116dp"
             android:layout_height="116dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="18dp"
             android:layout_marginTop="?attr/actionBarSize"
             android:elevation="4dp"
             android:foreground="@drawable/ic_saidit"
             app:srcCompat="@drawable/ic_saidit"/>
 
-        <TextView
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="96dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:paddingBottom="16dp"
-            android:text="@string/app_name"/>
+            android:contentDescription="@string/app_name"
+            android:src="@mipmap/ic_saidit_text"/>
 
     </LinearLayout>
-
-    <include
-        layout="@layout/loading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/top_listing_recycler"
@@ -64,5 +57,24 @@
         android:visibility="gone"
         tools:listitem="@layout/listing_item_list"/>
 
+    <include
+        layout="@layout/loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
+    <ViewStub
+        android:id="@+id/oauth_error_stub"
+        style="@style/AppTheme.ErrorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/authentication_error"/>
+
+    <ViewStub
+        android:id="@+id/empty_list_stub"
+        style="@style/AppTheme.ErrorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/empty_list_view"/>
 
 </merge>

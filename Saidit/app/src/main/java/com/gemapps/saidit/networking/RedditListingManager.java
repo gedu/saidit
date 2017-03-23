@@ -72,6 +72,7 @@ public class RedditListingManager implements RedditContract.Manager {
     public void getTopListing(EventBus bus, String query,
                               @PaginationManager.PaginationType int pagType){
         if(!needToRefreshToken()){
+            Log.d(TAG, "getTopListing: "+query);
             new TopListingRequest(NetInjector.getClientAsync(), bus)
                     .getTopListing(query, pagType);
         }else{
